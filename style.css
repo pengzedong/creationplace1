@@ -200,6 +200,7 @@ body {
 #gameScreen {
     flex-direction: column;
     background: transparent;
+    gap: 15px;
 }
 
 /* UI Bar */
@@ -261,6 +262,33 @@ body {
     border-radius: 0 0 15px 15px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     max-width: 1400px;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 10px;
+}
+
+.btn-control {
+    padding: 12px 30px;
+    font-size: 1em;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2c3e50;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-control:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: white;
 }
 
 /* Canvas */
@@ -377,6 +405,39 @@ body {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
     }
+}
+
+/* === Failure Screen === */
+.failure-container {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 600px;
+}
+
+.failure-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: #e74c3c;
+}
+
+.failure-message {
+    margin-bottom: 30px;
+}
+
+.failure-message p {
+    font-size: 1.3em;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.failure-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 /* === Success Screen === */

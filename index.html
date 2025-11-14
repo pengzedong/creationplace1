@@ -16,11 +16,11 @@
             <div class="game-rules">
                 <h2>How to Play:</h2>
                 <ul>
-                    <li><strong>Goal:</strong> Reach the green flag to win!</li>
-                    <li><strong>Danger:</strong> Never step on ground that matches your color - you'll die!</li>
-                    <li><strong>Strategy:</strong> Use color change tiles (with ⚡ symbol) to change your color</li>
-                    <li><strong>Controls:</strong> Use Arrow Keys or WASD to move</li>
-                    <li><strong>Restart:</strong> Press R to restart the level anytime</li>
+                    <li><strong>Goal:</strong> Reach the green flag (🏁) to win!</li>
+                    <li><strong>Core Rule:</strong> You can ONLY walk on tiles that match your current color or neutral ground!</li>
+                    <li><strong>Strategy:</strong> Use color changers (⚡) to switch colors and access new areas</li>
+                    <li><strong>Danger:</strong> Stepping on wrong colors or pits means death!</li>
+                    <li><strong>Controls:</strong> Arrow Keys or WASD to move, R to restart</li>
                 </ul>
             </div>
 
@@ -108,8 +108,28 @@
             </div>
         </div>
 
+        <!-- Game Controls -->
+        <div class="game-controls">
+            <button id="restartButton" class="btn-control">🔄 Restart</button>
+            <button id="mainMenuButton" class="btn-control">🏠 Main Menu</button>
+        </div>
+
         <!-- Status Messages (failure, success, etc.) -->
         <div id="statusMessage" class="status-message hidden"></div>
+    </div>
+
+    <!-- Failure Screen - Shows when player dies -->
+    <div id="failureScreen" class="screen hidden">
+        <div class="failure-container">
+            <h1>💀 Game Over!</h1>
+            <div class="failure-message">
+                <p id="failureReason">You died!</p>
+            </div>
+            <div class="failure-actions">
+                <button id="retryButton" class="btn-primary">🔄 Try Again</button>
+                <button id="failureMainMenuButton" class="btn-secondary">🏠 Main Menu</button>
+            </div>
+        </div>
     </div>
 
     <!-- Success Screen - Shows when level is completed -->
