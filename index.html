@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Path - Puzzle Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Welcome Screen - Shows before game starts -->
+    <div id="welcomeScreen" class="screen">
+        <div class="welcome-container">
+            <h1>🎨 Color Path</h1>
+            <p class="tagline">A Strategic Color-Switching Puzzle Game</p>
+
+            <div class="game-rules">
+                <h2>How to Play:</h2>
+                <ul>
+                    <li><strong>Goal:</strong> Reach the green flag to win!</li>
+                    <li><strong>Danger:</strong> Never step on ground that matches your color - you'll die!</li>
+                    <li><strong>Strategy:</strong> Use color change tiles (with ⚡ symbol) to change your color</li>
+                    <li><strong>Controls:</strong> Use Arrow Keys or WASD to move</li>
+                    <li><strong>Restart:</strong> Press R to restart the level anytime</li>
+                </ul>
+            </div>
+
+            <div class="name-input-section">
+                <label for="playerName">Enter Your Name (optional):</label>
+                <input
+                    type="text"
+                    id="playerName"
+                    placeholder="Anonymous"
+                    maxlength="20"
+                    autocomplete="off"
+                >
+            </div>
+
+            <button id="startButton" class="btn-primary">Start Game</button>
+
+            <div class="color-legend">
+                <h3>Color Legend:</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #e74c3c;"></div>
+                        <span>Red Ground/Player</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #3498db;"></div>
+                        <span>Blue Ground/Player</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #f1c40f;"></div>
+                        <span>Yellow Ground/Player</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #95a5a6;"></div>
+                        <span>Neutral Ground (Safe for all)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #2c3e50;"></div>
+                        <span>Obstacle (Impassable)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #1a1a1a;"></div>
+                        <span>Pit (Fall to death)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen - Main gameplay area -->
+    <div id="gameScreen" class="screen hidden">
+        <!-- Top UI Bar -->
+        <div class="ui-bar">
+            <div class="player-info">
+                <div class="info-item">
+                    <span class="label">Player:</span>
+                    <span id="currentPlayerName">Anonymous</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Color:</span>
+                    <span id="currentPlayerColor" class="color-indicator">Red</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Level:</span>
+                    <span id="currentLevel">1</span>
+                </div>
+            </div>
+
+            <div class="timer-container">
+                <span class="label">Time:</span>
+                <span id="timer">0.00s</span>
+            </div>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="game-container">
+            <!-- Canvas for rendering the game -->
+            <canvas id="gameCanvas"></canvas>
+
+            <!-- Leaderboard Panel -->
+            <div class="leaderboard-panel">
+                <h2>🏆 Top 10</h2>
+                <div id="leaderboardList" class="leaderboard-list">
+                    <!-- Leaderboard entries will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Messages (failure, success, etc.) -->
+        <div id="statusMessage" class="status-message hidden"></div>
+    </div>
+
+    <!-- Success Screen - Shows when level is completed -->
+    <div id="successScreen" class="screen hidden">
+        <div class="success-container">
+            <h1>🎉 Level Complete!</h1>
+            <div class="success-stats">
+                <p>Congratulations, <span id="successPlayerName"></span>!</p>
+                <p class="completion-time">Time: <span id="completionTime"></span></p>
+                <p id="recordMessage" class="record-message"></p>
+            </div>
+            <div class="success-actions">
+                <button id="playAgainButton" class="btn-primary">Play Again</button>
+                <button id="viewLeaderboardButton" class="btn-secondary">View Leaderboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
