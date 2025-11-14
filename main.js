@@ -97,10 +97,10 @@ const COLOR_VALUES = {
 
 const LEVEL_1 = {
     name: "Level 1: Color Switching Basics",
-    width: 15,
+    width: 16,
     height: 10,
     startPos: { x: 1, y: 5 },
-    goalPos: { x: 13, y: 5 },
+    goalPos: { x: 14, y: 5 },
 
     /**
      * Grid Layout Legend:
@@ -115,28 +115,32 @@ const LEVEL_1 = {
      * CR = Red color changer
      * CB = Blue color changer
      * CY = Yellow color changer
+     *
+     * NEW RULE: Player can ONLY step on their own color or neutral tiles!
+     * This level teaches the basic mechanic: Start as RED, walk on RED tiles,
+     * use color changers to switch colors and access different colored zones.
      */
     grid: [
         // Row 0
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
         // Row 1
-        ['O', 'E', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'O'],
         // Row 2
-        ['O', 'E', 'N', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'Y', 'N', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'R', 'N', 'E', 'O'],
         // Row 3
-        ['O', 'E', 'N', 'CB', 'B', 'B', 'N', 'CY', 'Y', 'Y', 'Y', 'N', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'B', 'CB', 'E', 'E', 'Y', 'CY', 'E', 'E', 'CR', 'R', 'N', 'E', 'O'],
         // Row 4
-        ['O', 'E', 'N', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'Y', 'N', 'N', 'E', 'O'],
-        // Row 5 (Main path)
-        ['O', 'S', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'CR', 'R', 'G', 'O'],
+        ['O', 'E', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'R', 'N', 'E', 'O'],
+        // Row 5 (Main path) - Player starts as RED
+        ['O', 'S', 'R', 'R', 'CB', 'B', 'B', 'CY', 'Y', 'Y', 'CR', 'R', 'R', 'N', 'G', 'O'],
         // Row 6
-        ['O', 'E', 'N', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'Y', 'N', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'R', 'N', 'E', 'O'],
         // Row 7
-        ['O', 'E', 'N', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'Y', 'N', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'B', 'B', 'E', 'E', 'Y', 'Y', 'E', 'E', 'R', 'R', 'N', 'E', 'O'],
         // Row 8
-        ['O', 'E', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'O'],
         // Row 9
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
     ]
 };
 
@@ -788,6 +792,24 @@ class Game {
             }
         });
 
+        // Game control buttons
+        document.getElementById('restartButton').addEventListener('click', () => {
+            this.restartLevel();
+        });
+
+        document.getElementById('mainMenuButton').addEventListener('click', () => {
+            this.showWelcomeScreen();
+        });
+
+        // Failure screen buttons
+        document.getElementById('retryButton').addEventListener('click', () => {
+            this.restartLevel();
+        });
+
+        document.getElementById('failureMainMenuButton').addEventListener('click', () => {
+            this.showWelcomeScreen();
+        });
+
         // Success screen buttons
         document.getElementById('playAgainButton').addEventListener('click', () => {
             this.restartGame();
@@ -890,9 +912,10 @@ class Game {
                 break;
 
             case TILE_TYPES.GROUND:
-                // Check if ground color matches player color
-                if (tile.color === playerColor && tile.color !== COLORS.NEUTRAL) {
-                    this.playerDied('You stepped on your own color!');
+                // Player can ONLY step on their own color or neutral ground
+                // Stepping on any other color causes death
+                if (tile.color !== playerColor && tile.color !== COLORS.NEUTRAL) {
+                    this.playerDied(`You can't walk on ${tile.color} ground!`);
                 }
                 break;
 
@@ -914,12 +937,12 @@ class Game {
      */
     playerDied(message) {
         this.isPlaying = false;
-        this.showStatusMessage(message, false);
 
-        // Reset after delay
-        setTimeout(() => {
-            this.restartLevel();
-        }, 1000);
+        // Stop the timer
+        this.timer.stop();
+
+        // Show failure screen instead of auto-restarting
+        this.showFailureScreen(message);
     }
 
     /**
@@ -940,6 +963,9 @@ class Game {
      * Restarts the current level
      */
     restartLevel() {
+        // Show game screen
+        this.showGameScreen();
+
         // Reset player
         this.player.reset();
 
@@ -1042,12 +1068,32 @@ class Game {
     }
 
     /**
+     * Shows the failure screen
+     */
+    showFailureScreen(message) {
+        document.getElementById('welcomeScreen').classList.add('hidden');
+        document.getElementById('gameScreen').classList.add('hidden');
+        document.getElementById('successScreen').classList.add('hidden');
+        document.getElementById('failureScreen').classList.remove('hidden');
+
+        // Update failure message
+        document.getElementById('failureReason').textContent = message;
+
+        // Cancel game loop
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+    }
+
+    /**
      * Shows the welcome screen
      */
     showWelcomeScreen() {
         document.getElementById('welcomeScreen').classList.remove('hidden');
         document.getElementById('gameScreen').classList.add('hidden');
         document.getElementById('successScreen').classList.add('hidden');
+        document.getElementById('failureScreen').classList.add('hidden');
 
         // Cancel game loop
         if (this.animationId) {
@@ -1064,6 +1110,7 @@ class Game {
         document.getElementById('welcomeScreen').classList.add('hidden');
         document.getElementById('gameScreen').classList.remove('hidden');
         document.getElementById('successScreen').classList.add('hidden');
+        document.getElementById('failureScreen').classList.add('hidden');
     }
 
     /**
@@ -1073,6 +1120,7 @@ class Game {
         document.getElementById('welcomeScreen').classList.add('hidden');
         document.getElementById('gameScreen').classList.add('hidden');
         document.getElementById('successScreen').classList.remove('hidden');
+        document.getElementById('failureScreen').classList.add('hidden');
 
         // Update success screen content
         document.getElementById('successPlayerName').textContent = this.playerName;
