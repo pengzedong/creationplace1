@@ -12,12 +12,20 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #2c3e50;
     overflow: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* === Screen Management === */
@@ -270,6 +278,22 @@ body {
     gap: 15px;
     justify-content: center;
     padding: 10px;
+    flex-wrap: wrap;
+}
+
+.controls-help {
+    text-align: center;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.controls-help p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #7f8c8d;
+    font-weight: 500;
 }
 
 .btn-control {
@@ -407,6 +431,38 @@ body {
     }
 }
 
+.floating-text {
+    animation: floatUp 1.5s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(-50px);
+    }
+}
+
+/* Smooth transitions for player movement */
+.player-transition {
+    transition: all 0.2s ease-out;
+}
+
+/* Particle effects */
+@keyframes particleBurst {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2) rotate(360deg);
+        opacity: 0;
+    }
+}
+
 /* === Failure Screen === */
 .failure-container {
     background: white;
@@ -466,10 +522,27 @@ body {
     color: #2c3e50;
 }
 
+.star-display {
+    font-size: 2.5em !important;
+    margin: 20px 0 !important;
+    animation: starPulse 1s ease-in-out;
+}
+
+@keyframes starPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
 .completion-time {
     font-size: 1.5em !important;
     font-weight: bold;
     color: #667eea;
+}
+
+.completion-moves {
+    font-size: 1.2em !important;
+    font-weight: 600;
+    color: #3498db;
 }
 
 .record-message {

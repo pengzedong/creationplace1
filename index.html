@@ -16,11 +16,13 @@
             <div class="game-rules">
                 <h2>How to Play:</h2>
                 <ul>
-                    <li><strong>Goal:</strong> Reach the green flag (🏁) to win!</li>
-                    <li><strong>Core Rule:</strong> You can ONLY walk on tiles that match your current color or neutral ground!</li>
-                    <li><strong>Strategy:</strong> Use color changers (⚡) to switch colors and access new areas</li>
-                    <li><strong>Danger:</strong> Stepping on wrong colors or pits means death!</li>
-                    <li><strong>Controls:</strong> Arrow Keys or WASD to move, R to restart</li>
+                    <li><strong>Goal:</strong> Reach the flag (🏁) in minimum moves to earn stars!</li>
+                    <li><strong>Core Rule:</strong> Walk ONLY on tiles matching your color or neutral ground!</li>
+                    <li><strong>Strategy:</strong> Use color changers (⚡) to access new areas</li>
+                    <li><strong>Math Gates:</strong> Solve equations (🔢) to unlock purple gates</li>
+                    <li><strong>Keys & Doors:</strong> Collect keys (🔑) to open doors (🚪)</li>
+                    <li><strong>Fragile Tiles:</strong> Step carefully on ⚠️ - they break after one use!</li>
+                    <li><strong>Controls:</strong> Arrows/WASD = Move | R = Restart | U = Undo | H = Hint</li>
                 </ul>
             </div>
 
@@ -84,7 +86,15 @@
                 </div>
                 <div class="info-item">
                     <span class="label">Level:</span>
-                    <span id="currentLevel">1</span>
+                    <span id="currentLevel">1/5</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Moves:</span>
+                    <span id="moveCount" style="font-weight: bold;">0/20</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Keys:</span>
+                    <span id="keyCount" style="font-weight: bold; color: #f39c12;">0</span>
                 </div>
             </div>
 
@@ -110,8 +120,13 @@
 
         <!-- Game Controls -->
         <div class="game-controls">
-            <button id="restartButton" class="btn-control">🔄 Restart</button>
+            <button id="restartButton" class="btn-control">🔄 Restart (R)</button>
+            <button id="undoButton" class="btn-control">↩️ Undo (U)</button>
+            <button id="hintButton" class="btn-control">💡 Hint (H)</button>
             <button id="mainMenuButton" class="btn-control">🏠 Main Menu</button>
+        </div>
+        <div class="controls-help">
+            <p>🎮 Controls: Arrow Keys/WASD = Move | R = Restart | U = Undo | H = Hint</p>
         </div>
 
         <!-- Status Messages (failure, success, etc.) -->
@@ -138,12 +153,15 @@
             <h1>🎉 Level Complete!</h1>
             <div class="success-stats">
                 <p>Congratulations, <span id="successPlayerName"></span>!</p>
+                <p class="star-display" id="starRating">⭐⭐⭐</p>
                 <p class="completion-time">Time: <span id="completionTime"></span></p>
+                <p class="completion-moves" id="completionMoves">Moves: 0/20</p>
                 <p id="recordMessage" class="record-message"></p>
             </div>
             <div class="success-actions">
-                <button id="playAgainButton" class="btn-primary">Play Again</button>
-                <button id="viewLeaderboardButton" class="btn-secondary">View Leaderboard</button>
+                <button id="nextLevelButton" class="btn-primary">Next Level ➡️</button>
+                <button id="playAgainButton" class="btn-secondary">🔄 Retry</button>
+                <button id="viewLeaderboardButton" class="btn-secondary">🏠 Main Menu</button>
             </div>
         </div>
     </div>
