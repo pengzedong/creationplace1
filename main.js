@@ -31,7 +31,12 @@ const TILE_TYPES = {
     OBSTACLE: 'obstacle',     // Impassable wall
     COLOR_CHANGE: 'colorChange', // Changes player's color
     START: 'start',           // Player spawn point
-    GOAL: 'goal'              // Level completion point
+    GOAL: 'goal',             // Level completion point
+    MATH_GATE: 'mathGate',    // Math puzzle gate
+    KEY: 'key',               // Collectible key
+    DOOR: 'door',             // Locked door (requires key)
+    TELEPORT: 'teleport',     // Teleporter
+    FRAGILE: 'fragile'        // One-time-use tile
 };
 
 // Colors
@@ -51,7 +56,12 @@ const COLOR_VALUES = {
     obstacle: '#2c3e50',
     empty: '#1a1a1a',
     start: '#27ae60',
-    goal: '#2ecc71'
+    goal: '#2ecc71',
+    mathGate: '#9b59b6',
+    key: '#f39c12',
+    door: '#34495e',
+    teleport: '#1abc9c',
+    fragile: '#e67e22'
 };
 
 // ============================================
@@ -101,6 +111,7 @@ const LEVEL_1 = {
     height: 10,
     startPos: { x: 1, y: 5 },
     goalPos: { x: 14, y: 5 },
+    targetMoves: 20,
 
     /**
      * Grid Layout Legend:
@@ -144,8 +155,112 @@ const LEVEL_1 = {
     ]
 };
 
+// Level 2: Math Gates Introduction
+const LEVEL_2 = {
+    name: "Level 2: Number Gates",
+    width: 14,
+    height: 10,
+    startPos: { x: 1, y: 5 },
+    goalPos: { x: 12, y: 5 },
+    mathGates: [
+        { x: 4, y: 5, question: "3 + 2", answer: 5 },
+        { x: 9, y: 5, question: "4 × 2", answer: 8 }
+    ],
+    targetMoves: 25,
+    grid: [
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'N', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'E', 'E', 'Y', 'Y', 'E', 'E', 'R', 'N', 'O'],
+        ['O', 'E', 'N', 'R', 'CB', 'N', 'N', 'CY', 'Y', 'N', 'N', 'CR', 'N', 'O'],
+        ['O', 'S', 'R', 'R', 'MG', 'B', 'B', 'B', 'MG', 'Y', 'R', 'R', 'G', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'N', 'N', 'B', 'B', 'N', 'N', 'R', 'N', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'E', 'E', 'B', 'B', 'E', 'E', 'R', 'N', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'E', 'O'],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 3: Keys and Doors
+const LEVEL_3 = {
+    name: "Level 3: Key Collection",
+    width: 16,
+    height: 12,
+    startPos: { x: 1, y: 6 },
+    goalPos: { x: 14, y: 6 },
+    targetMoves: 35,
+    grid: [
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        ['O', 'E', 'E', 'E', 'N', 'N', 'E', 'E', 'E', 'E', 'N', 'N', 'E', 'E', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'K', 'R', 'N', 'E', 'E', 'N', 'Y', 'K', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'CB', 'N', 'E', 'E', 'N', 'CY', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'N', 'N', 'B', 'N', 'E', 'E', 'N', 'Y', 'N', 'N', 'N', 'E', 'O'],
+        ['O', 'S', 'R', 'R', 'D', 'B', 'B', 'B', 'D', 'Y', 'Y', 'D', 'R', 'R', 'G', 'O'],
+        ['O', 'E', 'N', 'N', 'N', 'B', 'N', 'E', 'E', 'N', 'Y', 'N', 'N', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'CR', 'R', 'N', 'E', 'E', 'N', 'Y', 'CR', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'O'],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 4: Fragile Tiles Challenge
+const LEVEL_4 = {
+    name: "Level 4: Fragile Path",
+    width: 18,
+    height: 12,
+    startPos: { x: 1, y: 6 },
+    goalPos: { x: 16, y: 6 },
+    targetMoves: 40,
+    grid: [
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'F', 'N', 'E', 'N', 'N', 'E', 'N', 'Y', 'Y', 'F', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'CB', 'F', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'CY', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'F', 'B', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'F', 'B', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'F', 'N', 'E', 'O'],
+        ['O', 'S', 'R', 'F', 'F', 'F', 'B', 'B', 'B', 'B', 'B', 'B', 'Y', 'F', 'F', 'R', 'G', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'F', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'N', 'CR', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'N', 'N', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'O'],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 5: Master Challenge
+const LEVEL_5 = {
+    name: "Level 5: Master Puzzle",
+    width: 20,
+    height: 14,
+    startPos: { x: 1, y: 7 },
+    goalPos: { x: 18, y: 7 },
+    mathGates: [
+        { x: 6, y: 7, question: "10 - 3", answer: 7 },
+        { x: 13, y: 7, question: "6 × 3", answer: 18 }
+    ],
+    targetMoves: 50,
+    grid: [
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        ['O', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'F', 'R', 'N', 'E', 'N', 'N', 'E', 'N', 'Y', 'F', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'K', 'F', 'CB', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'CY', 'F', 'K', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'F', 'R', 'R', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'F', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'F', 'D', 'B', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'D', 'F', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'N', 'B', 'B', 'N', 'E', 'N', 'CR', 'N', 'E', 'N', 'Y', 'N', 'Y', 'N', 'E', 'O'],
+        ['O', 'S', 'R', 'F', 'F', 'F', 'MG', 'B', 'B', 'B', 'B', 'B', 'B', 'MG', 'F', 'F', 'F', 'R', 'G', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'R', 'R', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'F', 'R', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'F', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'F', 'CB', 'F', 'R', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'F', 'CR', 'N', 'E', 'O'],
+        ['O', 'E', 'N', 'R', 'R', 'R', 'R', 'N', 'E', 'N', 'N', 'N', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
+        ['O', 'E', 'E', 'N', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'N', 'E', 'E', 'O'],
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
 // Main levels array - add new levels here
-const LEVELS = [LEVEL_1];
+const LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5];
 
 // ============================================
 // HELPER FUNCTIONS
@@ -202,6 +317,26 @@ function parseTile(tileStr) {
         return { type: TILE_TYPES.COLOR_CHANGE, color: COLORS.YELLOW };
     }
 
+    // Math gates
+    if (tileStr === 'MG') {
+        return { type: TILE_TYPES.MATH_GATE, color: COLORS.NEUTRAL, locked: true };
+    }
+
+    // Keys
+    if (tileStr === 'K') {
+        return { type: TILE_TYPES.KEY, color: COLORS.NEUTRAL, collected: false };
+    }
+
+    // Doors
+    if (tileStr === 'D') {
+        return { type: TILE_TYPES.DOOR, color: COLORS.NEUTRAL, locked: true };
+    }
+
+    // Fragile tiles
+    if (tileStr === 'F') {
+        return { type: TILE_TYPES.FRAGILE, color: COLORS.NEUTRAL, used: false };
+    }
+
     // Default to neutral ground
     return { type: TILE_TYPES.GROUND, color: COLORS.NEUTRAL };
 }
@@ -221,14 +356,42 @@ class Player {
         this.y = startY;
         this.color = initialColor;
         this.initialColor = initialColor;
+        this.keys = 0;
+        this.moveCount = 0;
+        this.moveHistory = []; // For undo feature
     }
 
     /**
      * Moves the player to a new position
      */
     moveTo(x, y) {
+        // Save state for undo
+        this.moveHistory.push({
+            x: this.x,
+            y: this.y,
+            color: this.color,
+            keys: this.keys
+        });
+
         this.x = x;
         this.y = y;
+        this.moveCount++;
+    }
+
+    /**
+     * Undo the last move
+     */
+    undo() {
+        if (this.moveHistory.length > 0) {
+            const lastState = this.moveHistory.pop();
+            this.x = lastState.x;
+            this.y = lastState.y;
+            this.color = lastState.color;
+            this.keys = lastState.keys;
+            this.moveCount = Math.max(0, this.moveCount - 1);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -239,12 +402,47 @@ class Player {
     }
 
     /**
+     * Adds a key to inventory
+     */
+    addKey() {
+        this.keys++;
+    }
+
+    /**
+     * Uses a key
+     */
+    useKey() {
+        if (this.keys > 0) {
+            this.keys--;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets number of keys
+     */
+    getKeys() {
+        return this.keys;
+    }
+
+    /**
+     * Gets move count
+     */
+    getMoves() {
+        return this.moveCount;
+    }
+
+    /**
      * Resets player to starting position and color
      */
     reset() {
         this.x = this.startX;
         this.y = this.startY;
         this.color = this.initialColor;
+        this.keys = 0;
+        this.moveCount = 0;
+        this.moveHistory = [];
     }
 
     /**
@@ -305,7 +503,42 @@ class LevelManager {
             }
         }
 
+        // Set up math gates if present
+        if (levelConfig.mathGates) {
+            levelConfig.mathGates.forEach(gate => {
+                const tile = this.getTile(gate.x, gate.y);
+                if (tile && tile.type === TILE_TYPES.MATH_GATE) {
+                    tile.question = gate.question;
+                    tile.answer = gate.answer;
+                }
+            });
+        }
+
         return true;
+    }
+
+    /**
+     * Gets the target moves for star rating
+     */
+    getTargetMoves() {
+        return this.currentLevel.targetMoves || 999;
+    }
+
+    /**
+     * Calculates star rating based on moves
+     * 3 stars: <= target moves
+     * 2 stars: <= target moves * 1.3
+     * 1 star: > target moves * 1.3
+     */
+    calculateStars(moveCount) {
+        const target = this.getTargetMoves();
+        if (moveCount <= target) {
+            return 3;
+        } else if (moveCount <= target * 1.3) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 
     /**
@@ -580,7 +813,7 @@ class Renderer {
     }
 
     /**
-     * Draws a single tile
+     * Draws a single tile with enhanced visuals
      */
     drawTile(x, y, tile) {
         const pixelX = x * TILE_SIZE;
@@ -602,6 +835,18 @@ class Renderer {
             case TILE_TYPES.GOAL:
                 fillColor = COLOR_VALUES.goal;
                 break;
+            case TILE_TYPES.MATH_GATE:
+                fillColor = tile.locked ? COLOR_VALUES.mathGate : COLOR_VALUES.neutral;
+                break;
+            case TILE_TYPES.KEY:
+                fillColor = tile.collected ? COLOR_VALUES.neutral : COLOR_VALUES.key;
+                break;
+            case TILE_TYPES.DOOR:
+                fillColor = tile.locked ? COLOR_VALUES.door : COLOR_VALUES.neutral;
+                break;
+            case TILE_TYPES.FRAGILE:
+                fillColor = tile.used ? COLOR_VALUES.empty : COLOR_VALUES.fragile;
+                break;
             case TILE_TYPES.COLOR_CHANGE:
             case TILE_TYPES.GROUND:
                 fillColor = COLOR_VALUES[tile.color];
@@ -610,14 +855,27 @@ class Renderer {
                 fillColor = COLOR_VALUES.neutral;
         }
 
-        // Draw tile background
-        this.ctx.fillStyle = fillColor;
+        // Draw tile background with gradient
+        const gradient = this.ctx.createLinearGradient(pixelX, pixelY, pixelX + TILE_SIZE, pixelY + TILE_SIZE);
+        gradient.addColorStop(0, fillColor);
+        gradient.addColorStop(1, this.adjustBrightness(fillColor, -20));
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(pixelX, pixelY, TILE_SIZE, TILE_SIZE);
+
+        // Add glow effect for interactive tiles
+        if (tile.type === TILE_TYPES.COLOR_CHANGE || tile.type === TILE_TYPES.GOAL ||
+            tile.type === TILE_TYPES.MATH_GATE || tile.type === TILE_TYPES.KEY) {
+            const time = Date.now() / 1000;
+            const glow = Math.sin(time * 2) * 0.3 + 0.7;
+            this.ctx.shadowBlur = 10 * glow;
+            this.ctx.shadowColor = fillColor;
+        }
 
         // Draw tile border
         this.ctx.strokeStyle = '#2c3e50';
         this.ctx.lineWidth = 1;
         this.ctx.strokeRect(pixelX, pixelY, TILE_SIZE, TILE_SIZE);
+        this.ctx.shadowBlur = 0;
 
         // Draw special symbols
         this.ctx.fillStyle = '#fff';
@@ -629,15 +887,45 @@ class Renderer {
         const centerY = pixelY + TILE_SIZE / 2;
 
         if (tile.type === TILE_TYPES.COLOR_CHANGE) {
-            // Draw lightning bolt symbol for color changers
             this.ctx.fillText('⚡', centerX, centerY);
         } else if (tile.type === TILE_TYPES.GOAL) {
-            // Draw flag symbol for goal
-            this.ctx.fillText('🏁', centerX, centerY);
+            const time = Date.now() / 1000;
+            const scale = 1 + Math.sin(time * 3) * 0.1;
+            this.ctx.save();
+            this.ctx.translate(centerX, centerY);
+            this.ctx.scale(scale, scale);
+            this.ctx.fillText('🏁', 0, 0);
+            this.ctx.restore();
         } else if (tile.type === TILE_TYPES.START) {
-            // Draw house symbol for start
             this.ctx.fillText('🏠', centerX, centerY);
+        } else if (tile.type === TILE_TYPES.MATH_GATE && tile.locked) {
+            this.ctx.font = 'bold 16px Arial';
+            this.ctx.fillStyle = '#fff';
+            this.ctx.fillText('🔢', centerX, centerY - 8);
+            this.ctx.font = 'bold 12px Arial';
+            if (tile.question) {
+                this.ctx.fillText(tile.question, centerX, centerY + 8);
+            }
+        } else if (tile.type === TILE_TYPES.KEY && !tile.collected) {
+            this.ctx.fillText('🔑', centerX, centerY);
+        } else if (tile.type === TILE_TYPES.DOOR && tile.locked) {
+            this.ctx.fillText('🚪', centerX, centerY);
+        } else if (tile.type === TILE_TYPES.FRAGILE && !tile.used) {
+            this.ctx.fillStyle = '#fff';
+            this.ctx.font = 'bold 20px Arial';
+            this.ctx.fillText('⚠️', centerX, centerY);
         }
+    }
+
+    /**
+     * Adjusts color brightness
+     */
+    adjustBrightness(color, amount) {
+        const hex = color.replace('#', '');
+        const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+        const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+        const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
     }
 
     /**
@@ -737,6 +1025,14 @@ class InputHandler {
                 // Restart level
                 this.game.restartLevel();
                 return;
+            case 'u':
+                // Undo last move
+                this.game.undoMove();
+                return;
+            case 'h':
+                // Show hint
+                this.game.showHint();
+                return;
         }
 
         // Process movement
@@ -797,6 +1093,14 @@ class Game {
             this.restartLevel();
         });
 
+        document.getElementById('undoButton').addEventListener('click', () => {
+            this.undoMove();
+        });
+
+        document.getElementById('hintButton').addEventListener('click', () => {
+            this.showHint();
+        });
+
         document.getElementById('mainMenuButton').addEventListener('click', () => {
             this.showWelcomeScreen();
         });
@@ -823,13 +1127,15 @@ class Game {
     /**
      * Starts the game
      */
-    startGame() {
-        // Get player name
-        const nameInput = document.getElementById('playerName');
-        this.playerName = nameInput.value.trim() || 'Anonymous';
+    startGame(levelIndex = 0) {
+        // Get player name if not already set
+        if (!this.playerName) {
+            const nameInput = document.getElementById('playerName');
+            this.playerName = nameInput.value.trim() || 'Anonymous';
+        }
 
-        // Load first level
-        if (!this.levelManager.loadLevel(0)) {
+        // Load specified level
+        if (!this.levelManager.loadLevel(levelIndex)) {
             console.error('Failed to load level');
             return;
         }
@@ -845,7 +1151,9 @@ class Game {
         // Update UI
         document.getElementById('currentPlayerName').textContent = this.playerName;
         this.updatePlayerColorUI();
-        document.getElementById('currentLevel').textContent = '1';
+        document.getElementById('currentLevel').textContent = `${levelIndex + 1}/${LEVELS.length}`;
+        this.updateMovesUI();
+        this.updateKeysUI();
 
         // Show game screen
         this.showGameScreen();
@@ -904,6 +1212,7 @@ class Game {
      */
     handleTileInteraction(tile) {
         const playerColor = this.player.getColor();
+        const pos = this.player.getPosition();
 
         switch (tile.type) {
             case TILE_TYPES.EMPTY:
@@ -919,10 +1228,50 @@ class Game {
                 }
                 break;
 
+            case TILE_TYPES.FRAGILE:
+                // Fragile tiles can only be stepped on once
+                if (tile.used) {
+                    this.playerDied('The fragile tile crumbled beneath you!');
+                } else {
+                    tile.used = true; // Mark as used after stepping on it
+                }
+                break;
+
             case TILE_TYPES.COLOR_CHANGE:
                 // Change player color
                 this.player.setColor(tile.color);
                 this.updatePlayerColorUI();
+                this.showParticleEffect(pos.x, pos.y, tile.color);
+                break;
+
+            case TILE_TYPES.KEY:
+                // Collect key
+                if (!tile.collected) {
+                    tile.collected = true;
+                    this.player.addKey();
+                    this.updateKeysUI();
+                    this.showFloatingText(pos.x, pos.y, '+1 Key!', '#f39c12');
+                }
+                break;
+
+            case TILE_TYPES.DOOR:
+                // Try to open door with key
+                if (tile.locked) {
+                    if (this.player.useKey()) {
+                        tile.locked = false;
+                        this.updateKeysUI();
+                        this.showFloatingText(pos.x, pos.y, 'Door Unlocked!', '#27ae60');
+                    } else {
+                        this.playerDied('You need a key to open this door!');
+                    }
+                }
+                break;
+
+            case TILE_TYPES.MATH_GATE:
+                // Math puzzle gate
+                if (tile.locked) {
+                    this.showMathPuzzle(tile, pos.x, pos.y);
+                }
                 break;
 
             case TILE_TYPES.GOAL:
@@ -930,6 +1279,55 @@ class Game {
                 this.levelCompleted();
                 break;
         }
+
+        // Update moves display
+        this.updateMovesUI();
+    }
+
+    /**
+     * Shows a math puzzle dialog
+     */
+    showMathPuzzle(tile, x, y) {
+        this.isPlaying = false;
+        const answer = prompt(`Math Challenge!\n\n${tile.question} = ?`);
+
+        if (answer !== null) {
+            if (parseInt(answer) === tile.answer) {
+                tile.locked = false;
+                this.showFloatingText(x, y, 'Correct! ✓', '#27ae60');
+                this.isPlaying = true;
+            } else {
+                this.playerDied('Wrong answer! Try again.');
+            }
+        } else {
+            this.isPlaying = true;
+        }
+    }
+
+    /**
+     * Shows particle effect at position
+     */
+    showParticleEffect(x, y, color) {
+        // Visual feedback for color changes
+        // This creates a simple visual cue
+        const element = document.getElementById('statusMessage');
+        element.style.display = 'none'; // Will be animated in CSS
+    }
+
+    /**
+     * Shows floating text at position
+     */
+    showFloatingText(x, y, text, color) {
+        const messageElement = document.getElementById('statusMessage');
+        messageElement.textContent = text;
+        messageElement.style.color = color;
+        messageElement.classList.remove('hidden');
+        messageElement.classList.add('floating-text');
+
+        setTimeout(() => {
+            messageElement.classList.add('hidden');
+            messageElement.classList.remove('floating-text');
+        }, 1500);
     }
 
     /**
@@ -951,12 +1349,77 @@ class Game {
     levelCompleted() {
         this.isPlaying = false;
         const completionTime = this.timer.stop();
+        const moveCount = this.player.getMoves();
+        const stars = this.levelManager.calculateStars(moveCount);
 
         // Add score to leaderboard
         const rank = this.leaderboard.addScore(this.playerName, completionTime);
 
-        // Show success screen
-        this.showSuccessScreen(completionTime, rank);
+        // Show success screen with stars
+        this.showSuccessScreen(completionTime, rank, stars, moveCount);
+    }
+
+    /**
+     * Undo the last move
+     */
+    undoMove() {
+        if (this.player.undo()) {
+            this.updateMovesUI();
+            this.updateKeysUI();
+            this.updatePlayerColorUI();
+            this.showFloatingText(this.player.x, this.player.y, 'Undone!', '#95a5a6');
+        }
+    }
+
+    /**
+     * Show a hint to the player
+     */
+    showHint() {
+        const goalPos = this.levelManager.getGoalPosition();
+        const playerPos = this.player.getPosition();
+
+        const dx = goalPos.x - playerPos.x;
+        const dy = goalPos.y - playerPos.y;
+
+        let hint = 'Hint: ';
+        if (Math.abs(dx) > Math.abs(dy)) {
+            hint += dx > 0 ? 'Try moving RIGHT' : 'Try moving LEFT';
+        } else {
+            hint += dy > 0 ? 'Try moving DOWN' : 'Try moving UP';
+        }
+
+        this.showFloatingText(playerPos.x, playerPos.y, hint, '#3498db');
+    }
+
+    /**
+     * Updates the moves counter UI
+     */
+    updateMovesUI() {
+        const movesElement = document.getElementById('moveCount');
+        if (movesElement) {
+            const moves = this.player.getMoves();
+            const target = this.levelManager.getTargetMoves();
+            movesElement.textContent = `${moves}/${target}`;
+
+            // Color code based on performance
+            if (moves <= target) {
+                movesElement.style.color = '#27ae60'; // Green
+            } else if (moves <= target * 1.3) {
+                movesElement.style.color = '#f39c12'; // Orange
+            } else {
+                movesElement.style.color = '#e74c3c'; // Red
+            }
+        }
+    }
+
+    /**
+     * Updates the keys counter UI
+     */
+    updateKeysUI() {
+        const keysElement = document.getElementById('keyCount');
+        if (keysElement) {
+            keysElement.textContent = this.player.getKeys();
+        }
     }
 
     /**
@@ -965,6 +1428,9 @@ class Game {
     restartLevel() {
         // Show game screen
         this.showGameScreen();
+
+        // Reload the level to reset tiles (fragile, keys, doors, math gates)
+        this.levelManager.loadLevel(this.levelManager.currentLevelIndex);
 
         // Reset player
         this.player.reset();
@@ -975,6 +1441,8 @@ class Game {
 
         // Update UI
         this.updatePlayerColorUI();
+        this.updateMovesUI();
+        this.updateKeysUI();
         document.getElementById('timer').textContent = '0.00s';
 
         // Hide status message
@@ -1116,7 +1584,7 @@ class Game {
     /**
      * Shows the success screen
      */
-    showSuccessScreen(completionTime, rank) {
+    showSuccessScreen(completionTime, rank, stars, moveCount) {
         document.getElementById('welcomeScreen').classList.add('hidden');
         document.getElementById('gameScreen').classList.add('hidden');
         document.getElementById('successScreen').classList.remove('hidden');
@@ -1126,6 +1594,20 @@ class Game {
         document.getElementById('successPlayerName').textContent = this.playerName;
         document.getElementById('completionTime').textContent =
             this.timer.formatTime(completionTime);
+
+        // Show star rating
+        const starElement = document.getElementById('starRating');
+        if (starElement) {
+            let starText = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+            starElement.textContent = starText;
+        }
+
+        // Show moves
+        const movesElement = document.getElementById('completionMoves');
+        if (movesElement) {
+            const target = this.levelManager.getTargetMoves();
+            movesElement.textContent = `${moveCount} moves (Target: ${target})`;
+        }
 
         // Show rank message
         const recordMessage = document.getElementById('recordMessage');
@@ -1137,6 +1619,21 @@ class Game {
             }
         } else {
             recordMessage.textContent = 'Keep practicing to make the top 10!';
+        }
+
+        // Show or hide "Next Level" button
+        const nextLevelBtn = document.getElementById('nextLevelButton');
+        if (nextLevelBtn) {
+            if (this.levelManager.hasNextLevel()) {
+                nextLevelBtn.classList.remove('hidden');
+                nextLevelBtn.onclick = () => {
+                    const nextLevel = this.levelManager.currentLevelIndex + 1;
+                    this.startGame(nextLevel);
+                };
+            } else {
+                nextLevelBtn.classList.add('hidden');
+                recordMessage.textContent += ' 🎊 You completed all levels!';
+            }
         }
 
         // Update leaderboard

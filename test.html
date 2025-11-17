@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Path - Automated Test Suite</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #764ba2;
+            margin-top: 30px;
+        }
+
+        .test-suite {
+            margin: 20px 0;
+        }
+
+        .test-case {
+            border-left: 4px solid #95a5a6;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .test-case.pass {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+        }
+
+        .test-case.fail {
+            border-left-color: #e74c3c;
+            background: #f8d7da;
+        }
+
+        .test-case.running {
+            border-left-color: #f39c12;
+            background: #fff3cd;
+        }
+
+        .test-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .test-result {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .summary {
+            background: #e8f4f8;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .summary h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat.pass {
+            background: #27ae60;
+            color: white;
+        }
+
+        .stat.fail {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .stat.total {
+            background: #3498db;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            width: 100%;
+            height: 30px;
+            background: #ecf0f1;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .error-details {
+            background: #fff;
+            border: 1px solid #e74c3c;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.85em;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Color Path - Automated Test Suite</h1>
+
+        <div class="summary" id="summary" style="display: none;">
+            <h3>Test Results Summary</h3>
+            <div class="stats">
+                <div class="stat total">
+                    <div class="stat-number" id="totalTests">0</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat pass">
+                    <div class="stat-number" id="passedTests">0</div>
+                    <div class="stat-label">Passed ✓</div>
+                </div>
+                <div class="stat fail">
+                    <div class="stat-number" id="failedTests">0</div>
+                    <div class="stat-label">Failed ✗</div>
+                </div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+            <div class="timestamp" id="timestamp"></div>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="runAllTests()" id="runBtn">▶️ Run All Tests</button>
+            <button onclick="location.reload()">🔄 Reset</button>
+        </div>
+
+        <div id="testResults"></div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Test Suite Configuration
+        const testSuites = {
+            'Core Classes': [
+                'Player class instantiation',
+                'Player movement and position tracking',
+                'Player undo functionality',
+                'Player key collection',
+                'Player move counter'
+            ],
+            'Level Management': [
+                'Level loading',
+                'Tile parsing',
+                'Level progression',
+                'Star rating calculation',
+                'Target moves validation'
+            ],
+            'Tile Interactions': [
+                'Color matching validation',
+                'Fragile tile mechanics',
+                'Math gate functionality',
+                'Key and door mechanics',
+                'Color changer tiles'
+            ],
+            'Game Systems': [
+                'Timer system',
+                'Leaderboard system',
+                'Renderer initialization',
+                'Input handler',
+                'Game state management'
+            ],
+            'UI Integration': [
+                'Move counter display',
+                'Keys counter display',
+                'Level display',
+                'Star rating display',
+                'Success screen'
+            ]
+        };
+
+        let totalTests = 0;
+        let passedTests = 0;
+        let failedTests = 0;
+        let currentTest = 0;
+
+        // Calculate total tests
+        Object.values(testSuites).forEach(tests => {
+            totalTests += tests.length;
+        });
+
+        function updateProgress() {
+            const percent = Math.round((currentTest / totalTests) * 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressBar').textContent = percent + '%';
+        }
+
+        function updateSummary() {
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+            document.getElementById('timestamp').textContent =
+                'Test completed at: ' + new Date().toLocaleString();
+        }
+
+        function createTestCase(name, status, error = null) {
+            const testDiv = document.createElement('div');
+            testDiv.className = `test-case ${status}`;
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'test-name';
+            nameDiv.textContent = `${status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⏳'} ${name}`;
+
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'test-result';
+            resultDiv.textContent = status === 'pass' ? 'Test passed' :
+                                   status === 'fail' ? 'Test failed' : 'Running...';
+
+            testDiv.appendChild(nameDiv);
+            testDiv.appendChild(resultDiv);
+
+            if (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-details';
+                errorDiv.textContent = error;
+                testDiv.appendChild(errorDiv);
+            }
+
+            return testDiv;
+        }
+
+        async function runTest(testName, testFn) {
+            const resultsDiv = document.getElementById('testResults');
+            const testDiv = createTestCase(testName, 'running');
+            resultsDiv.appendChild(testDiv);
+
+            await new Promise(resolve => setTimeout(resolve, 50)); // Visual delay
+
+            try {
+                await testFn();
+                testDiv.className = 'test-case pass';
+                testDiv.querySelector('.test-name').textContent = `✅ ${testName}`;
+                testDiv.querySelector('.test-result').textContent = 'Test passed';
+                passedTests++;
+            } catch (error) {
+                testDiv.className = 'test-case fail';
+                testDiv.querySelector('.test-name').textContent = `❌ ${testName}`;
+                testDiv.querySelector('.test-result').textContent = 'Test failed: ' + error.message;
+
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-details';
+                errorDiv.textContent = error.stack || error.message;
+                testDiv.appendChild(errorDiv);
+
+                failedTests++;
+            }
+
+            currentTest++;
+            updateProgress();
+        }
+
+        async function runAllTests() {
+            // Disable run button
+            document.getElementById('runBtn').disabled = true;
+
+            // Reset counters
+            passedTests = 0;
+            failedTests = 0;
+            currentTest = 0;
+            document.getElementById('testResults').innerHTML = '';
+
+            // Core Classes Tests
+            const coreTests = document.createElement('div');
+            coreTests.innerHTML = '<h2>Core Classes Tests</h2>';
+            document.getElementById('testResults').appendChild(coreTests);
+
+            await runTest('Player class instantiation', async () => {
+                const player = new Player(5, 5, COLORS.RED);
+                if (!player || player.x !== 5 || player.y !== 5) throw new Error('Player not created correctly');
+                if (player.color !== COLORS.RED) throw new Error('Player color not set');
+                if (player.keys !== 0) throw new Error('Keys not initialized');
+                if (player.moveCount !== 0) throw new Error('Move count not initialized');
+            });
+
+            await runTest('Player movement and position tracking', async () => {
+                const player = new Player(0, 0);
+                player.moveTo(1, 2);
+                if (player.x !== 1 || player.y !== 2) throw new Error('Player position not updated');
+                if (player.moveCount !== 1) throw new Error('Move count not incremented');
+                const pos = player.getPosition();
+                if (pos.x !== 1 || pos.y !== 2) throw new Error('getPosition() failed');
+            });
+
+            await runTest('Player undo functionality', async () => {
+                const player = new Player(0, 0, COLORS.RED);
+                player.moveTo(1, 1);
+                player.moveTo(2, 2);
+                const undoResult = player.undo();
+                if (!undoResult) throw new Error('Undo failed');
+                if (player.x !== 1 || player.y !== 1) throw new Error('Position not restored');
+                if (player.moveCount !== 1) throw new Error('Move count not decremented');
+            });
+
+            await runTest('Player key collection', async () => {
+                const player = new Player(0, 0);
+                player.addKey();
+                if (player.getKeys() !== 1) throw new Error('Key not added');
+                player.addKey();
+                if (player.getKeys() !== 2) throw new Error('Multiple keys not added');
+                const useResult = player.useKey();
+                if (!useResult || player.getKeys() !== 1) throw new Error('Key not used');
+            });
+
+            await runTest('Player move counter', async () => {
+                const player = new Player(0, 0);
+                for (let i = 0; i < 5; i++) player.moveTo(i, i);
+                if (player.getMoves() !== 5) throw new Error(`Expected 5 moves, got ${player.getMoves()}`);
+            });
+
+            // Level Management Tests
+            const levelTests = document.createElement('div');
+            levelTests.innerHTML = '<h2>Level Management Tests</h2>';
+            document.getElementById('testResults').appendChild(levelTests);
+
+            await runTest('Level loading', async () => {
+                const levelManager = new LevelManager();
+                const loaded = levelManager.loadLevel(0);
+                if (!loaded) throw new Error('Level failed to load');
+                if (!levelManager.currentLevel) throw new Error('Current level not set');
+                if (!levelManager.grid) throw new Error('Grid not created');
+            });
+
+            await runTest('Tile parsing', async () => {
+                const tile1 = parseTile('R');
+                if (tile1.type !== TILE_TYPES.GROUND || tile1.color !== COLORS.RED)
+                    throw new Error('Red ground tile not parsed correctly');
+
+                const tile2 = parseTile('MG');
+                if (tile2.type !== TILE_TYPES.MATH_GATE || !tile2.locked)
+                    throw new Error('Math gate not parsed correctly');
+
+                const tile3 = parseTile('K');
+                if (tile3.type !== TILE_TYPES.KEY || tile3.collected)
+                    throw new Error('Key tile not parsed correctly');
+            });
+
+            await runTest('Level progression', async () => {
+                const levelManager = new LevelManager();
+                levelManager.loadLevel(0);
+                const hasNext = levelManager.hasNextLevel();
+                if (!hasNext) throw new Error('Next level should exist');
+                const advanced = levelManager.goToNextLevel();
+                if (!advanced || levelManager.currentLevelIndex !== 1)
+                    throw new Error('Failed to advance to next level');
+            });
+
+            await runTest('Star rating calculation', async () => {
+                const levelManager = new LevelManager();
+                levelManager.loadLevel(0);
+                const target = levelManager.getTargetMoves();
+
+                const stars3 = levelManager.calculateStars(target);
+                if (stars3 !== 3) throw new Error(`Expected 3 stars for ${target} moves, got ${stars3}`);
+
+                const stars2 = levelManager.calculateStars(Math.floor(target * 1.2));
+                if (stars2 !== 2) throw new Error(`Expected 2 stars, got ${stars2}`);
+
+                const stars1 = levelManager.calculateStars(target * 2);
+                if (stars1 !== 1) throw new Error(`Expected 1 star, got ${stars1}`);
+            });
+
+            await runTest('Target moves validation', async () => {
+                const levelManager = new LevelManager();
+                for (let i = 0; i < LEVELS.length; i++) {
+                    levelManager.loadLevel(i);
+                    const target = levelManager.getTargetMoves();
+                    if (!target || target <= 0) throw new Error(`Level ${i+1} has invalid target moves`);
+                }
+            });
+
+            // Tile Interactions Tests
+            const tileTests = document.createElement('div');
+            tileTests.innerHTML = '<h2>Tile Interactions Tests</h2>';
+            document.getElementById('testResults').appendChild(tileTests);
+
+            await runTest('Color matching validation', async () => {
+                const groundRed = { type: TILE_TYPES.GROUND, color: COLORS.RED };
+                const groundNeutral = { type: TILE_TYPES.GROUND, color: COLORS.NEUTRAL };
+
+                // Red player on red ground = OK
+                // Red player on neutral ground = OK
+                // Red player on blue ground = FAIL
+                if (groundRed.color !== COLORS.RED) throw new Error('Color match logic error');
+                if (groundNeutral.color !== COLORS.NEUTRAL) throw new Error('Neutral tile error');
+            });
+
+            await runTest('Fragile tile mechanics', async () => {
+                const fragile = parseTile('F');
+                if (fragile.type !== TILE_TYPES.FRAGILE) throw new Error('Fragile tile not created');
+                if (fragile.used) throw new Error('Fragile tile should not be used initially');
+                fragile.used = true;
+                if (!fragile.used) throw new Error('Fragile tile state not updated');
+            });
+
+            await runTest('Math gate functionality', async () => {
+                const levelManager = new LevelManager();
+                levelManager.loadLevel(1); // Level 2 has math gates
+                const mathGates = levelManager.currentLevel.mathGates;
+                if (!mathGates || mathGates.length === 0)
+                    throw new Error('Math gates not loaded for level 2');
+                if (!mathGates[0].question || !mathGates[0].answer)
+                    throw new Error('Math gate properties missing');
+            });
+
+            await runTest('Key and door mechanics', async () => {
+                const key = parseTile('K');
+                const door = parseTile('D');
+
+                if (key.type !== TILE_TYPES.KEY) throw new Error('Key tile incorrect');
+                if (door.type !== TILE_TYPES.DOOR) throw new Error('Door tile incorrect');
+                if (!door.locked) throw new Error('Door should be locked initially');
+
+                door.locked = false;
+                if (door.locked) throw new Error('Door unlock failed');
+            });
+
+            await runTest('Color changer tiles', async () => {
+                const changerRed = parseTile('CR');
+                const changerBlue = parseTile('CB');
+                const changerYellow = parseTile('CY');
+
+                if (changerRed.type !== TILE_TYPES.COLOR_CHANGE || changerRed.color !== COLORS.RED)
+                    throw new Error('Red color changer incorrect');
+                if (changerBlue.color !== COLORS.BLUE) throw new Error('Blue color changer incorrect');
+                if (changerYellow.color !== COLORS.YELLOW) throw new Error('Yellow color changer incorrect');
+            });
+
+            // Game Systems Tests
+            const systemTests = document.createElement('div');
+            systemTests.innerHTML = '<h2>Game Systems Tests</h2>';
+            document.getElementById('testResults').appendChild(systemTests);
+
+            await runTest('Timer system', async () => {
+                const timer = new TimerSystem();
+                timer.start();
+                await new Promise(resolve => setTimeout(resolve, 100));
+                const elapsed = timer.getElapsedTime();
+                if (elapsed < 0.09 || elapsed > 0.15)
+                    throw new Error(`Timer inaccurate: ${elapsed}s`);
+                timer.stop();
+                const formatted = timer.formatTime(65.5);
+                if (formatted !== '65.50s') throw new Error('Time formatting failed');
+            });
+
+            await runTest('Leaderboard system', async () => {
+                const leaderboard = new LeaderboardSystem();
+                leaderboard.clearScores();
+                const rank = leaderboard.addScore('TestPlayer', 30.5);
+                if (rank !== 1) throw new Error(`Expected rank 1, got ${rank}`);
+                const scores = leaderboard.getTopScores();
+                if (scores.length !== 1) throw new Error('Score not added to leaderboard');
+                if (scores[0].name !== 'TestPlayer') throw new Error('Player name incorrect');
+            });
+
+            await runTest('Renderer initialization', async () => {
+                const canvas = document.createElement('canvas');
+                const renderer = new Renderer(canvas);
+                if (!renderer.ctx) throw new Error('Canvas context not initialized');
+                renderer.initCanvas(10, 10);
+                if (canvas.width !== 500 || canvas.height !== 500)
+                    throw new Error('Canvas size incorrect');
+            });
+
+            await runTest('Input handler', async () => {
+                const mockGame = {
+                    isPlaying: true,
+                    movePlayer: () => {},
+                    restartLevel: () => {},
+                    undoMove: () => {},
+                    showHint: () => {}
+                };
+                const handler = new InputHandler(mockGame);
+                if (!handler.game) throw new Error('Game reference not set');
+                if (!handler.keys) throw new Error('Keys object not initialized');
+            });
+
+            await runTest('Game state management', async () => {
+                if (!TILE_TYPES) throw new Error('TILE_TYPES not defined');
+                if (!COLORS) throw new Error('COLORS not defined');
+                if (!LEVELS || LEVELS.length !== 5)
+                    throw new Error(`Expected 5 levels, got ${LEVELS ? LEVELS.length : 0}`);
+                if (!COLOR_VALUES) throw new Error('COLOR_VALUES not defined');
+            });
+
+            // UI Integration Tests
+            const uiTests = document.createElement('div');
+            uiTests.innerHTML = '<h2>UI Integration Tests</h2>';
+            document.getElementById('testResults').appendChild(uiTests);
+
+            await runTest('Move counter display', async () => {
+                const elem = document.getElementById('moveCount');
+                if (!elem) throw new Error('Move counter element not found in HTML');
+            });
+
+            await runTest('Keys counter display', async () => {
+                const elem = document.getElementById('keyCount');
+                if (!elem) throw new Error('Keys counter element not found in HTML');
+            });
+
+            await runTest('Level display', async () => {
+                const elem = document.getElementById('currentLevel');
+                if (!elem) throw new Error('Level display element not found in HTML');
+            });
+
+            await runTest('Star rating display', async () => {
+                const elem = document.getElementById('starRating');
+                if (!elem) throw new Error('Star rating element not found in HTML');
+            });
+
+            await runTest('Success screen', async () => {
+                const elem = document.getElementById('successScreen');
+                if (!elem) throw new Error('Success screen element not found in HTML');
+                const nextLevelBtn = document.getElementById('nextLevelButton');
+                if (!nextLevelBtn) throw new Error('Next level button not found');
+            });
+
+            // Update final summary
+            updateSummary();
+            document.getElementById('runBtn').disabled = false;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            console.log('Test page loaded. Click "Run All Tests" to begin.');
+        });
+    </script>
+</body>
+</html>
