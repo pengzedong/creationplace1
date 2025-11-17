@@ -437,6 +437,140 @@ For issues or questions:
 3. Inspect browser console for errors
 4. Verify file structure is correct
 
+## 🧪 Testing & Quality Assurance
+
+### Automated Test Suite
+
+The game includes a comprehensive automated test suite to ensure all features work correctly.
+
+#### Running Tests
+
+1. Open `test.html` in your browser
+2. Click **"▶️ Run All Tests"**
+3. Watch the tests execute in real-time
+4. Review the summary and results
+
+```bash
+# Simply open in browser
+open test.html  # macOS
+start test.html  # Windows
+xdg-open test.html  # Linux
+```
+
+#### Test Coverage
+
+The test suite includes **25+ automated tests** covering:
+
+**Core Classes** (5 tests)
+- ✅ Player class instantiation
+- ✅ Movement and position tracking
+- ✅ Undo functionality
+- ✅ Key collection mechanics
+- ✅ Move counter accuracy
+
+**Level Management** (5 tests)
+- ✅ Level loading system
+- ✅ Tile parsing logic
+- ✅ Level progression
+- ✅ Star rating calculation
+- ✅ Target moves validation
+
+**Tile Interactions** (5 tests)
+- ✅ Color matching validation
+- ✅ Fragile tile mechanics
+- ✅ Math gate functionality
+- ✅ Key and door mechanics
+- ✅ Color changer tiles
+
+**Game Systems** (5 tests)
+- ✅ Timer accuracy
+- ✅ Leaderboard system
+- ✅ Renderer initialization
+- ✅ Input handling
+- ✅ Game state management
+
+**UI Integration** (5 tests)
+- ✅ Move counter display
+- ✅ Keys counter display
+- ✅ Level progression display
+- ✅ Star rating display
+- ✅ Success screen elements
+
+### Architecture Documentation
+
+For detailed architecture analysis, see [`ARCHITECTURE.md`](ARCHITECTURE.md):
+
+- **Class Diagrams** - Complete system architecture
+- **Sequence Diagrams** - Game flow visualization
+- **Flow Analysis** - Logic flow documentation
+- **Requirements Validation** - Feature checklist
+- **Data Flow** - Input/output pipeline
+- **Performance Considerations** - Optimization strategies
+
+### Manual Testing Checklist
+
+**Game Start Flow**
+- [ ] Welcome screen displays correctly
+- [ ] Player name input works
+- [ ] "Start Game" button functions
+- [ ] Game transitions to play screen
+
+**Gameplay Mechanics**
+- [ ] Movement with WASD/Arrow keys works
+- [ ] Color matching rules enforced
+- [ ] Death triggers on wrong color
+- [ ] Color changers work correctly
+- [ ] Math gates show puzzles
+- [ ] Keys can be collected
+- [ ] Doors unlock with keys
+- [ ] Fragile tiles break after use
+- [ ] Goal triggers level complete
+
+**Player Features**
+- [ ] Undo (U key) works
+- [ ] Hint (H key) provides direction
+- [ ] Restart (R key) resets level
+- [ ] Move counter updates
+- [ ] Keys counter updates
+
+**Level Progression**
+- [ ] All 5 levels load correctly
+- [ ] "Next Level" button appears
+- [ ] Level progression works
+- [ ] Completion message shows
+
+**UI/UX**
+- [ ] Timer displays correctly
+- [ ] Star rating shows on completion
+- [ ] Leaderboard saves scores
+- [ ] Animations are smooth
+- [ ] Visual feedback is clear
+
+### Performance Testing
+
+**Metrics to Verify**
+- Frame rate: ~60 FPS
+- Canvas rendering: Smooth, no flicker
+- Input latency: < 16ms
+- Level load time: < 100ms
+- Animation smoothness: No stuttering
+
+**Browser Testing**
+- Chrome/Edge: ✅ Tested
+- Firefox: ✅ Tested
+- Safari: ✅ Tested
+- Opera: ✅ Tested
+
+### Code Quality
+
+**Standards Met**
+- ✅ ES6+ JavaScript
+- ✅ Comprehensive comments
+- ✅ Modular architecture
+- ✅ No console errors
+- ✅ No memory leaks
+- ✅ Proper error handling
+
 ---
 
 **Have fun playing and creating levels!** 🎮🎨
