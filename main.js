@@ -1652,14 +1652,18 @@ class Game {
 // ============================================
 
 // Create game instance when DOM is ready
-let game;
+function initGame() {
+    const game = new Game();
+    // Store game instance globally for debugging if needed
+    window.game = game;
+}
 
+// Ensure DOM is fully loaded before initializing
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        game = new Game();
-    });
+    document.addEventListener('DOMContentLoaded', initGame);
 } else {
-    game = new Game();
+    // DOM is already ready, initialize immediately
+    initGame();
 }
 
 /**
