@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .test.error {
+            border-left-color: #e74c3c;
+        }
+        .test.success {
+            border-left-color: #27ae60;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Color Path - Debug Test</h1>
+    <div id="tests"></div>
+
+    <script src="main.js"></script>
+    <script>
+        const testsDiv = document.getElementById('tests');
+
+        function addTest(name, success, details = '') {
+            const div = document.createElement('div');
+            div.className = 'test ' + (success ? 'success' : 'error');
+            div.innerHTML = `
+                <h3>${success ? '✓' : '✗'} ${name}</h3>
+                ${details ? `<pre>${details}</pre>` : ''}
+            `;
+            testsDiv.appendChild(div);
+        }
+
+        // Test 1: Check if constants are defined
+        try {
+            addTest('Constants defined',
+                typeof TILE_SIZE !== 'undefined' &&
+                typeof COLORS !== 'undefined' &&
+                typeof LEVELS !== 'undefined',
+                `TILE_SIZE: ${typeof TILE_SIZE}\nCOLORS: ${typeof COLORS}\nLEVELS: ${typeof LEVELS}`
+            );
+        } catch(e) {
+            addTest('Constants defined', false, e.message);
+        }
+
+        // Test 2: Check if classes are defined
+        try {
+            addTest('Classes defined',
+                typeof Player !== 'undefined' &&
+                typeof LevelManager !== 'undefined' &&
+                typeof Game !== 'undefined',
+                `Player: ${typeof Player}\nLevelManager: ${typeof LevelManager}\nGame: ${typeof Game}`
+            );
+        } catch(e) {
+            addTest('Classes defined', false, e.message);
+        }
+
+        // Test 3: Check if LEVELS array has data
+        try {
+            addTest('LEVELS array populated',
+                LEVELS.length > 0 && LEVELS[0].grid,
+                `LEVELS.length: ${LEVELS.length}\nLevel 1 grid size: ${LEVELS[0].grid.length}x${LEVELS[0].grid[0].length}`
+            );
+        } catch(e) {
+            addTest('LEVELS array populated', false, e.message);
+        }
+
+        // Test 4: Test LevelManager
+        try {
+            const lm = new LevelManager();
+            const loaded = lm.loadLevel(0);
+            const dims = lm.getDimensions();
+            addTest('LevelManager works',
+                loaded && dims.width > 0 && dims.height > 0,
+                `Loaded: ${loaded}\nDimensions: ${dims.width}x${dims.height}`
+            );
+        } catch(e) {
+            addTest('LevelManager works', false, e.message);
+        }
+
+        // Test 5: Test Player
+        try {
+            const player = new Player(1, 1, COLORS.RED);
+            addTest('Player works',
+                player.x === 1 && player.y === 1 && player.color === COLORS.RED,
+                `Position: (${player.x}, ${player.y})\nColor: ${player.color}`
+            );
+        } catch(e) {
+            addTest('Player works', false, e.message);
+        }
+
+        // Test 6: Check if game instance was created
+        try {
+            addTest('Game instance created',
+                typeof game !== 'undefined' && game !== null,
+                `game type: ${typeof game}`
+            );
+        } catch(e) {
+            addTest('Game instance created', false, e.message);
+        }
+
+        // Test 7: Check DOM elements exist
+        try {
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const gameScreen = document.getElementById('gameScreen');
+            const gameCanvas = document.getElementById('gameCanvas');
+
+            addTest('DOM elements missing - THIS IS THE ISSUE!',
+                false,
+                `This test file doesn't have the game DOM elements.\nThis is expected. The real index.html should have:\n- welcomeScreen\n- gameScreen\n- gameCanvas\n- etc.`
+            );
+        } catch(e) {
+            addTest('DOM check', false, e.message);
+        }
+    </script>
+</body>
+</html>

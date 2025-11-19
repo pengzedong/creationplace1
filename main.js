@@ -533,8 +533,17 @@ class LeaderboardSystem {
  */
 class Renderer {
     constructor(canvas) {
+        if (!canvas) {
+            console.error('Renderer: Canvas element not found!');
+            throw new Error('Canvas element is required for Renderer');
+        }
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
+        if (!this.ctx) {
+            console.error('Renderer: Failed to get 2D context from canvas');
+            throw new Error('Could not get 2D context');
+        }
+        console.log('Renderer initialized successfully');
     }
 
     /**
@@ -751,92 +760,155 @@ class InputHandler {
  */
 class Game {
     constructor() {
-        // Initialize systems
-        this.levelManager = new LevelManager();
-        this.timer = new TimerSystem();
-        this.leaderboard = new LeaderboardSystem();
+        console.log('Game: Initializing...');
 
-        // Get DOM elements
-        this.canvas = document.getElementById('gameCanvas');
-        this.renderer = new Renderer(this.canvas);
-        this.inputHandler = new InputHandler(this);
+        try {
+            // Initialize systems
+            this.levelManager = new LevelManager();
+            console.log('Game: LevelManager created');
 
-        // Game state
-        this.player = null;
-        this.isPlaying = false;
-        this.playerName = '';
+            this.timer = new TimerSystem();
+            console.log('Game: TimerSystem created');
 
-        // Animation frame ID
-        this.animationId = null;
+            this.leaderboard = new LeaderboardSystem();
+            console.log('Game: LeaderboardSystem created');
 
-        this.setupUI();
+            // Get DOM elements
+            this.canvas = document.getElementById('gameCanvas');
+            if (!this.canvas) {
+                console.error('Game: Canvas element #gameCanvas not found in DOM!');
+                console.error('Make sure the HTML file is loaded properly');
+                throw new Error('Required DOM element missing: gameCanvas');
+            }
+            console.log('Game: Canvas element found');
+
+            this.renderer = new Renderer(this.canvas);
+            this.inputHandler = new InputHandler(this);
+            console.log('Game: Renderer and InputHandler created');
+
+            // Game state
+            this.player = null;
+            this.isPlaying = false;
+            this.playerName = '';
+
+            // Animation frame ID
+            this.animationId = null;
+
+            this.setupUI();
+            console.log('Game: Initialization complete!');
+        } catch (error) {
+            console.error('Game: Failed to initialize:', error);
+            alert('Failed to initialize game: ' + error.message + '\n\nPlease check the browser console for more details.');
+            throw error;
+        }
     }
 
     /**
      * Sets up UI event listeners
      */
     setupUI() {
-        // Start button
-        document.getElementById('startButton').addEventListener('click', () => {
-            this.startGame();
-        });
+        console.log('Game: Setting up UI...');
 
-        // Allow Enter key to start game
-        document.getElementById('playerName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+        try {
+            // Start button
+            const startButton = document.getElementById('startButton');
+            if (!startButton) throw new Error('Start button not found');
+            startButton.addEventListener('click', () => {
+                console.log('Start button clicked');
                 this.startGame();
-            }
-        });
+            });
 
-        // Success screen buttons
-        document.getElementById('playAgainButton').addEventListener('click', () => {
-            this.restartGame();
-        });
+            // Allow Enter key to start game
+            const playerNameInput = document.getElementById('playerName');
+            if (!playerNameInput) throw new Error('Player name input not found');
+            playerNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    console.log('Enter key pressed in name input');
+                    this.startGame();
+                }
+            });
 
-        document.getElementById('viewLeaderboardButton').addEventListener('click', () => {
-            this.showWelcomeScreen();
-        });
+            // Success screen buttons
+            const playAgainButton = document.getElementById('playAgainButton');
+            if (!playAgainButton) throw new Error('Play again button not found');
+            playAgainButton.addEventListener('click', () => {
+                console.log('Play again button clicked');
+                this.restartGame();
+            });
+
+            const viewLeaderboardButton = document.getElementById('viewLeaderboardButton');
+            if (!viewLeaderboardButton) throw new Error('View leaderboard button not found');
+            viewLeaderboardButton.addEventListener('click', () => {
+                console.log('View leaderboard button clicked');
+                this.showWelcomeScreen();
+            });
+
+            console.log('Game: UI setup complete');
+        } catch (error) {
+            console.error('Game: Failed to setup UI:', error);
+            throw error;
+        }
     }
 
     /**
      * Starts the game
      */
     startGame() {
-        // Get player name
-        const nameInput = document.getElementById('playerName');
-        this.playerName = nameInput.value.trim() || 'Anonymous';
+        console.log('Game: Starting game...');
 
-        // Load first level
-        if (!this.levelManager.loadLevel(0)) {
-            console.error('Failed to load level');
-            return;
+        try {
+            // Get player name
+            const nameInput = document.getElementById('playerName');
+            this.playerName = nameInput.value.trim() || 'Anonymous';
+            console.log('Game: Player name:', this.playerName);
+
+            // Load first level
+            console.log('Game: Loading level 0...');
+            if (!this.levelManager.loadLevel(0)) {
+                console.error('Failed to load level');
+                alert('Failed to load game level. Please refresh the page.');
+                return;
+            }
+            console.log('Game: Level loaded successfully');
+
+            // Initialize player
+            const startPos = this.levelManager.getStartPosition();
+            console.log('Game: Start position:', startPos);
+            this.player = new Player(startPos.x, startPos.y, COLORS.RED);
+            console.log('Game: Player created');
+
+            // Initialize canvas
+            const { width, height } = this.levelManager.getDimensions();
+            console.log('Game: Canvas dimensions:', width, 'x', height);
+            this.renderer.initCanvas(width, height);
+            console.log('Game: Canvas initialized');
+
+            // Update UI
+            document.getElementById('currentPlayerName').textContent = this.playerName;
+            this.updatePlayerColorUI();
+            document.getElementById('currentLevel').textContent = '1';
+            console.log('Game: UI updated');
+
+            // Show game screen
+            this.showGameScreen();
+            console.log('Game: Game screen shown');
+
+            // Start playing
+            this.isPlaying = true;
+            this.timer.start();
+            console.log('Game: Timer started');
+
+            // Start game loop
+            this.gameLoop();
+            console.log('Game: Game loop started');
+
+            // Update leaderboard display
+            this.updateLeaderboardDisplay();
+            console.log('Game: Game started successfully!');
+        } catch (error) {
+            console.error('Game: Error starting game:', error);
+            alert('Error starting game: ' + error.message);
         }
-
-        // Initialize player
-        const startPos = this.levelManager.getStartPosition();
-        this.player = new Player(startPos.x, startPos.y, COLORS.RED);
-
-        // Initialize canvas
-        const { width, height } = this.levelManager.getDimensions();
-        this.renderer.initCanvas(width, height);
-
-        // Update UI
-        document.getElementById('currentPlayerName').textContent = this.playerName;
-        this.updatePlayerColorUI();
-        document.getElementById('currentLevel').textContent = '1';
-
-        // Show game screen
-        this.showGameScreen();
-
-        // Start playing
-        this.isPlaying = true;
-        this.timer.start();
-
-        // Start game loop
-        this.gameLoop();
-
-        // Update leaderboard display
-        this.updateLeaderboardDisplay();
     }
 
     /**
@@ -1109,12 +1181,30 @@ class Game {
 // Create game instance when DOM is ready
 let game;
 
+console.log('Color Path: Script loaded');
+console.log('Color Path: Document ready state:', document.readyState);
+
 if (document.readyState === 'loading') {
+    console.log('Color Path: Waiting for DOMContentLoaded event...');
     document.addEventListener('DOMContentLoaded', () => {
-        game = new Game();
+        console.log('Color Path: DOMContentLoaded fired, creating game instance...');
+        try {
+            game = new Game();
+            console.log('Color Path: Game instance created successfully!');
+            console.log('Color Path: Ready to play! Click "Start Game" to begin.');
+        } catch (error) {
+            console.error('Color Path: Fatal error creating game:', error);
+        }
     });
 } else {
-    game = new Game();
+    console.log('Color Path: DOM already loaded, creating game instance immediately...');
+    try {
+        game = new Game();
+        console.log('Color Path: Game instance created successfully!');
+        console.log('Color Path: Ready to play! Click "Start Game" to begin.');
+    } catch (error) {
+        console.error('Color Path: Fatal error creating game:', error);
+    }
 }
 
 /**

@@ -366,19 +366,59 @@ game.leaderboard.clearScores();
 
 ## 🐛 Troubleshooting
 
+The game now includes **extensive console logging** and error handling to help identify issues quickly!
+
+### Quick Debugging Steps
+
+1. **Open Browser Developer Tools** (F12 or Ctrl+Shift+I)
+2. **Go to the Console tab**
+3. **Look for colored messages** - the game logs every major action
+4. **Check for red error messages**
+
+For detailed debugging instructions, see **[DEBUGGING.md](./DEBUGGING.md)**
+
 ### Common Issues
 
 **Problem**: Game doesn't load
-- **Solution**: Check browser console for errors. Ensure all three files are in the same directory.
+- **Solution**: Open browser console (F12) and look for error messages. Check that all three files (`index.html`, `style.css`, `main.js`) are in the same directory.
+- **Debug**: Look for "Color Path: Script loaded" message in console
 
 **Problem**: Leaderboard not saving
 - **Solution**: Check if localStorage is enabled in your browser. Try incognito/private mode.
 
 **Problem**: Canvas is blank
-- **Solution**: Ensure JavaScript is enabled. Check console for errors.
+- **Solution**: Open console and check for "Canvas element found" message. Ensure JavaScript is enabled.
 
 **Problem**: Controls not working
-- **Solution**: Click on the game canvas to focus it. Ensure keyboard is not captured by other elements.
+- **Solution**: Make sure you clicked "Start Game" first. Click on the game screen to focus it. Check console for "Game loop started" message.
+
+**Problem**: Welcome screen doesn't appear
+- **Solution**: Check if `style.css` is loading (Network tab in DevTools). Clear browser cache and reload (Ctrl+F5).
+
+### Console Logging
+
+The game now logs all major events:
+- ✅ Script loading
+- ✅ Game initialization
+- ✅ DOM element checks
+- ✅ Button clicks
+- ✅ Game start process
+- ✅ Player movements (when active)
+- ✅ Level loading
+- ✅ Errors with detailed messages
+
+Example console output when working correctly:
+```
+Color Path: Script loaded
+Game: Initializing...
+Game: LevelManager created
+Renderer initialized successfully
+Game: Initialization complete!
+```
+
+### Test File
+
+Run `test.html` in your browser to perform diagnostic tests on the game engine without needing the full UI.
 
 ## 📄 License
 
