@@ -22,7 +22,7 @@
 // CONSTANTS AND CONFIGURATION
 // ============================================
 
-const TILE_SIZE = 50; // Size of each grid cell in pixels
+const TILE_SIZE = 60; // Size of each grid cell in pixels (increased for better visibility)
 
 // Tile Types
 const TILE_TYPES = {
@@ -106,12 +106,12 @@ const COLOR_VALUES = {
  */
 
 const LEVEL_1 = {
-    name: "Level 1: Color Switching Basics",
-    width: 16,
-    height: 10,
-    startPos: { x: 1, y: 5 },
-    goalPos: { x: 14, y: 5 },
-    targetMoves: 20,
+    name: "Level 1: The Maze Challenge",
+    width: 20,
+    height: 14,
+    startPos: { x: 1, y: 1 },
+    goalPos: { x: 18, y: 12 },
+    targetMoves: 35,
 
     /**
      * Grid Layout Legend:
@@ -126,136 +126,231 @@ const LEVEL_1 = {
      * CR = Red color changer
      * CB = Blue color changer
      * CY = Yellow color changer
+     * F = Fragile tile (one-time use)
      *
-     * NEW RULE: Player can ONLY step on their own color or neutral tiles!
-     * This level teaches the basic mechanic: Start as RED, walk on RED tiles,
-     * use color changers to switch colors and access different colored zones.
+     * Strategy Required: This maze requires careful color planning!
+     * You must think ahead about which colors to use and when to switch.
+     * Wrong color choices will trap you or cause you to fall into pits.
      */
     grid: [
-        // Row 0
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-        // Row 1
-        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'O'],
-        // Row 2
-        ['O', 'E', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'R', 'N', 'E', 'O'],
-        // Row 3
-        ['O', 'E', 'N', 'B', 'CB', 'E', 'E', 'Y', 'CY', 'E', 'E', 'CR', 'R', 'N', 'E', 'O'],
-        // Row 4
-        ['O', 'E', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'R', 'N', 'E', 'O'],
-        // Row 5 (Main path) - Player starts as RED
-        ['O', 'S', 'R', 'R', 'CB', 'B', 'B', 'CY', 'Y', 'Y', 'CR', 'R', 'R', 'N', 'G', 'O'],
-        // Row 6
-        ['O', 'E', 'N', 'B', 'B', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'R', 'N', 'E', 'O'],
-        // Row 7
-        ['O', 'E', 'N', 'B', 'B', 'E', 'E', 'Y', 'Y', 'E', 'E', 'R', 'R', 'N', 'E', 'O'],
-        // Row 8
-        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'O'],
-        // Row 9
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
-    ]
-};
-
-// Level 2: Math Gates Introduction
-const LEVEL_2 = {
-    name: "Level 2: Number Gates",
-    width: 14,
-    height: 10,
-    startPos: { x: 1, y: 5 },
-    goalPos: { x: 12, y: 5 },
-    mathGates: [
-        { x: 4, y: 5, question: "3 + 2", answer: 5 },
-        { x: 9, y: 5, question: "4 × 2", answer: 8 }
-    ],
-    targetMoves: 25,
-    grid: [
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'N', 'N', 'Y', 'Y', 'N', 'N', 'R', 'N', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'E', 'E', 'Y', 'Y', 'E', 'E', 'R', 'N', 'O'],
-        ['O', 'E', 'N', 'R', 'CB', 'N', 'N', 'CY', 'Y', 'N', 'N', 'CR', 'N', 'O'],
-        ['O', 'S', 'R', 'R', 'MG', 'B', 'B', 'B', 'MG', 'Y', 'R', 'R', 'G', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'N', 'N', 'B', 'B', 'N', 'N', 'R', 'N', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'E', 'E', 'B', 'B', 'E', 'E', 'R', 'N', 'O'],
-        ['O', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'N', 'E', 'E', 'N', 'E', 'O'],
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
-    ]
-};
-
-// Level 3: Keys and Doors
-const LEVEL_3 = {
-    name: "Level 3: Key Collection",
-    width: 16,
-    height: 12,
-    startPos: { x: 1, y: 6 },
-    goalPos: { x: 14, y: 6 },
-    targetMoves: 35,
-    grid: [
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-        ['O', 'E', 'E', 'E', 'N', 'N', 'E', 'E', 'E', 'E', 'N', 'N', 'E', 'E', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'K', 'R', 'N', 'E', 'E', 'N', 'Y', 'K', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'CB', 'N', 'E', 'E', 'N', 'CY', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'N', 'N', 'B', 'N', 'E', 'E', 'N', 'Y', 'N', 'N', 'N', 'E', 'O'],
-        ['O', 'S', 'R', 'R', 'D', 'B', 'B', 'B', 'D', 'Y', 'Y', 'D', 'R', 'R', 'G', 'O'],
-        ['O', 'E', 'N', 'N', 'N', 'B', 'N', 'E', 'E', 'N', 'Y', 'N', 'N', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'CR', 'R', 'N', 'E', 'E', 'N', 'Y', 'CR', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'O'],
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
-    ]
-};
-
-// Level 4: Fragile Tiles Challenge
-const LEVEL_4 = {
-    name: "Level 4: Fragile Path",
-    width: 18,
-    height: 12,
-    startPos: { x: 1, y: 6 },
-    goalPos: { x: 16, y: 6 },
-    targetMoves: 40,
-    grid: [
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-        ['O', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'F', 'N', 'E', 'N', 'N', 'E', 'N', 'Y', 'Y', 'F', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'CB', 'F', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'CY', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'F', 'B', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'F', 'B', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'F', 'N', 'E', 'O'],
-        ['O', 'S', 'R', 'F', 'F', 'F', 'B', 'B', 'B', 'B', 'B', 'B', 'Y', 'F', 'F', 'R', 'G', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'F', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'N', 'CR', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'R', 'N', 'E', 'N', 'N', 'N', 'E', 'N', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'O'],
-        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
-    ]
-};
-
-// Level 5: Master Challenge
-const LEVEL_5 = {
-    name: "Level 5: Master Puzzle",
-    width: 20,
-    height: 14,
-    startPos: { x: 1, y: 7 },
-    goalPos: { x: 18, y: 7 },
-    mathGates: [
-        { x: 6, y: 7, question: "10 - 3", answer: 7 },
-        { x: 13, y: 7, question: "6 × 3", answer: 18 }
-    ],
-    targetMoves: 50,
-    grid: [
+        // Row 0 - Top border
         ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-        ['O', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'E', 'E', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'F', 'R', 'N', 'E', 'N', 'N', 'E', 'N', 'Y', 'F', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'K', 'F', 'CB', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'CY', 'F', 'K', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'F', 'R', 'R', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'F', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'F', 'D', 'B', 'B', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'D', 'F', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'N', 'B', 'B', 'N', 'E', 'N', 'CR', 'N', 'E', 'N', 'Y', 'N', 'Y', 'N', 'E', 'O'],
-        ['O', 'S', 'R', 'F', 'F', 'F', 'MG', 'B', 'B', 'B', 'B', 'B', 'B', 'MG', 'F', 'F', 'F', 'R', 'G', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'R', 'R', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'F', 'R', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'F', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'F', 'CB', 'F', 'R', 'N', 'E', 'N', 'B', 'N', 'E', 'N', 'Y', 'F', 'CR', 'N', 'E', 'O'],
-        ['O', 'E', 'N', 'R', 'R', 'R', 'R', 'N', 'E', 'N', 'N', 'N', 'E', 'N', 'Y', 'Y', 'Y', 'N', 'E', 'O'],
-        ['O', 'E', 'E', 'N', 'N', 'N', 'N', 'E', 'E', 'E', 'E', 'E', 'E', 'N', 'N', 'N', 'N', 'E', 'E', 'O'],
+        // Row 1 - Start area (Red)
+        ['O', 'S', 'R', 'R', 'O', 'N', 'B', 'B', 'O', 'E', 'E', 'O', 'Y', 'Y', 'N', 'O', 'E', 'E', 'E', 'O'],
+        // Row 2 - Complex path with color choices
+        ['O', 'E', 'R', 'CB', 'O', 'N', 'B', 'B', 'O', 'E', 'N', 'O', 'Y', 'CY', 'N', 'O', 'E', 'N', 'R', 'O'],
+        // Row 3 - Requires blue path
+        ['O', 'E', 'E', 'B', 'B', 'B', 'B', 'N', 'O', 'E', 'N', 'O', 'N', 'Y', 'Y', 'O', 'E', 'N', 'R', 'O'],
+        // Row 4 - Color change point with fragile tiles
+        ['O', 'N', 'N', 'N', 'O', 'O', 'CB', 'N', 'O', 'F', 'F', 'O', 'N', 'CY', 'O', 'O', 'E', 'N', 'CR', 'O'],
+        // Row 5 - Yellow zone with traps
+        ['O', 'R', 'R', 'N', 'O', 'B', 'B', 'N', 'O', 'F', 'N', 'O', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'R', 'O'],
+        // Row 6 - Multi-color challenge
+        ['O', 'R', 'CR', 'N', 'O', 'B', 'N', 'N', 'O', 'N', 'N', 'O', 'N', 'O', 'O', 'CY', 'Y', 'Y', 'Y', 'O'],
+        // Row 7 - Narrow passages
+        ['O', 'R', 'R', 'N', 'O', 'CB', 'B', 'B', 'B', 'B', 'N', 'O', 'N', 'O', 'N', 'N', 'O', 'O', 'CB', 'O'],
+        // Row 8 - Blue corridor with obstacles
+        ['O', 'E', 'N', 'N', 'O', 'E', 'O', 'O', 'O', 'B', 'N', 'O', 'F', 'O', 'R', 'N', 'N', 'N', 'B', 'O'],
+        // Row 9 - Red zone requiring backtracking knowledge
+        ['O', 'E', 'R', 'R', 'R', 'R', 'R', 'N', 'O', 'B', 'N', 'O', 'F', 'O', 'R', 'R', 'O', 'B', 'B', 'O'],
+        // Row 10 - Final color switching challenge
+        ['O', 'E', 'E', 'O', 'O', 'O', 'CR', 'N', 'O', 'N', 'N', 'O', 'N', 'O', 'E', 'CR', 'O', 'N', 'B', 'O'],
+        // Row 11 - Path to goal
+        ['O', 'E', 'E', 'N', 'R', 'R', 'R', 'N', 'O', 'Y', 'CY', 'O', 'N', 'N', 'N', 'R', 'R', 'N', 'N', 'O'],
+        // Row 12 - Goal area
+        ['O', 'E', 'E', 'N', 'N', 'O', 'E', 'N', 'O', 'Y', 'Y', 'O', 'R', 'R', 'R', 'R', 'N', 'N', 'G', 'O'],
+        // Row 13 - Bottom border
         ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 2: Math Puzzle Labyrinth
+const LEVEL_2 = {
+    name: "Level 2: Math Puzzle Labyrinth",
+    width: 22,
+    height: 15,
+    startPos: { x: 1, y: 1 },
+    goalPos: { x: 20, y: 13 },
+    mathGates: [
+        { x: 5, y: 3, question: "7 + 8", answer: 15 },
+        { x: 11, y: 7, question: "6 × 4", answer: 24 },
+        { x: 17, y: 11, question: "100 - 47", answer: 53 }
+    ],
+    targetMoves: 45,
+    grid: [
+        // Row 0
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        // Row 1 - Start
+        ['O', 'S', 'R', 'R', 'N', 'O', 'B', 'B', 'N', 'O', 'E', 'E', 'O', 'Y', 'Y', 'N', 'O', 'E', 'E', 'E', 'E', 'O'],
+        // Row 2
+        ['O', 'E', 'R', 'R', 'N', 'O', 'B', 'CB', 'N', 'O', 'E', 'N', 'O', 'Y', 'CY', 'N', 'O', 'E', 'R', 'R', 'N', 'O'],
+        // Row 3 - First Math Gate
+        ['O', 'E', 'CR', 'R', 'R', 'MG', 'B', 'B', 'N', 'O', 'E', 'N', 'O', 'N', 'Y', 'Y', 'O', 'E', 'R', 'R', 'N', 'O'],
+        // Row 4
+        ['O', 'N', 'N', 'O', 'O', 'O', 'N', 'B', 'N', 'O', 'F', 'F', 'O', 'N', 'O', 'CY', 'O', 'N', 'N', 'CR', 'N', 'O'],
+        // Row 5
+        ['O', 'R', 'R', 'R', 'N', 'O', 'N', 'CB', 'N', 'O', 'F', 'N', 'O', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'R', 'N', 'O'],
+        // Row 6
+        ['O', 'R', 'O', 'CR', 'N', 'O', 'B', 'B', 'N', 'O', 'N', 'N', 'O', 'N', 'O', 'O', 'O', 'CY', 'N', 'R', 'N', 'O'],
+        // Row 7 - Second Math Gate (center)
+        ['O', 'R', 'O', 'R', 'N', 'O', 'B', 'B', 'B', 'B', 'B', 'MG', 'N', 'N', 'O', 'Y', 'Y', 'Y', 'N', 'R', 'N', 'O'],
+        // Row 8
+        ['O', 'R', 'O', 'R', 'N', 'O', 'E', 'O', 'O', 'O', 'N', 'N', 'N', 'F', 'O', 'E', 'O', 'CB', 'B', 'B', 'N', 'O'],
+        // Row 9
+        ['O', 'N', 'O', 'CR', 'N', 'N', 'N', 'R', 'R', 'R', 'R', 'R', 'N', 'F', 'O', 'E', 'O', 'B', 'B', 'N', 'N', 'O'],
+        // Row 10
+        ['O', 'N', 'O', 'O', 'O', 'R', 'CR', 'R', 'O', 'O', 'O', 'R', 'N', 'N', 'O', 'E', 'O', 'N', 'CB', 'B', 'N', 'O'],
+        // Row 11 - Third Math Gate
+        ['O', 'Y', 'CY', 'N', 'O', 'R', 'R', 'N', 'O', 'E', 'O', 'CR', 'R', 'R', 'R', 'R', 'R', 'MG', 'B', 'B', 'N', 'O'],
+        // Row 12
+        ['O', 'Y', 'Y', 'N', 'O', 'E', 'N', 'N', 'O', 'E', 'O', 'E', 'O', 'O', 'O', 'O', 'N', 'N', 'N', 'N', 'N', 'O'],
+        // Row 13 - Goal
+        ['O', 'E', 'N', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'R', 'R', 'R', 'N', 'N', 'G', 'O'],
+        // Row 14
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 3: The Key Master's Vault
+const LEVEL_3 = {
+    name: "Level 3: The Key Master's Vault",
+    width: 24,
+    height: 16,
+    startPos: { x: 1, y: 1 },
+    goalPos: { x: 22, y: 14 },
+    targetMoves: 55,
+    grid: [
+        // Row 0
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        // Row 1 - Start (need to collect 4 keys!)
+        ['O', 'S', 'R', 'R', 'N', 'O', 'B', 'K', 'B', 'O', 'E', 'E', 'O', 'Y', 'Y', 'N', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O'],
+        // Row 2
+        ['O', 'E', 'R', 'R', 'N', 'O', 'B', 'B', 'N', 'O', 'E', 'N', 'O', 'Y', 'CY', 'N', 'O', 'E', 'R', 'R', 'K', 'R', 'N', 'O'],
+        // Row 3
+        ['O', 'E', 'CR', 'R', 'D', 'O', 'CB', 'B', 'N', 'O', 'E', 'N', 'O', 'N', 'Y', 'Y', 'O', 'E', 'R', 'CR', 'R', 'R', 'N', 'O'],
+        // Row 4
+        ['O', 'N', 'N', 'N', 'R', 'O', 'B', 'B', 'N', 'O', 'F', 'F', 'O', 'N', 'O', 'D', 'O', 'N', 'N', 'N', 'R', 'R', 'N', 'O'],
+        // Row 5
+        ['O', 'Y', 'Y', 'K', 'N', 'O', 'N', 'CB', 'N', 'O', 'F', 'N', 'O', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'O', 'O', 'D', 'O', 'O'],
+        // Row 6
+        ['O', 'Y', 'O', 'CY', 'N', 'O', 'B', 'B', 'N', 'O', 'N', 'N', 'O', 'N', 'O', 'O', 'O', 'CY', 'N', 'O', 'B', 'B', 'N', 'O'],
+        // Row 7
+        ['O', 'Y', 'O', 'Y', 'N', 'O', 'B', 'B', 'B', 'B', 'B', 'N', 'D', 'N', 'O', 'Y', 'Y', 'Y', 'N', 'O', 'CB', 'B', 'N', 'O'],
+        // Row 8
+        ['O', 'N', 'O', 'CY', 'N', 'O', 'E', 'O', 'O', 'O', 'N', 'N', 'N', 'F', 'O', 'E', 'O', 'N', 'N', 'O', 'B', 'B', 'K', 'O'],
+        // Row 9
+        ['O', 'N', 'O', 'N', 'N', 'N', 'N', 'R', 'R', 'R', 'R', 'R', 'N', 'F', 'O', 'E', 'O', 'R', 'CR', 'O', 'N', 'B', 'B', 'O'],
+        // Row 10
+        ['O', 'N', 'O', 'O', 'O', 'R', 'CR', 'R', 'O', 'O', 'O', 'R', 'N', 'N', 'O', 'E', 'O', 'R', 'R', 'D', 'N', 'N', 'N', 'O'],
+        // Row 11
+        ['O', 'Y', 'CY', 'Y', 'O', 'R', 'R', 'N', 'O', 'E', 'O', 'CR', 'R', 'R', 'R', 'R', 'R', 'R', 'N', 'O', 'B', 'B', 'N', 'O'],
+        // Row 12
+        ['O', 'Y', 'Y', 'N', 'O', 'E', 'N', 'N', 'O', 'E', 'O', 'E', 'O', 'O', 'O', 'O', 'N', 'N', 'N', 'O', 'CB', 'B', 'N', 'O'],
+        // Row 13
+        ['O', 'E', 'N', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'R', 'R', 'R', 'N', 'D', 'B', 'B', 'N', 'O'],
+        // Row 14 - Goal (need all 4 keys to reach!)
+        ['O', 'E', 'E', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'E', 'O', 'CR', 'R', 'R', 'R', 'N', 'G', 'O'],
+        // Row 15
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 4: Fragile Path Nightmare
+const LEVEL_4 = {
+    name: "Level 4: Fragile Path Nightmare",
+    width: 26,
+    height: 17,
+    startPos: { x: 1, y: 1 },
+    goalPos: { x: 24, y: 15 },
+    targetMoves: 60,
+    grid: [
+        // Row 0
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        // Row 1 - Start: Must plan fragile tiles carefully!
+        ['O', 'S', 'R', 'F', 'F', 'N', 'O', 'B', 'B', 'N', 'O', 'E', 'E', 'O', 'Y', 'F', 'F', 'N', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O'],
+        // Row 2
+        ['O', 'E', 'R', 'R', 'F', 'N', 'O', 'B', 'CB', 'N', 'O', 'E', 'N', 'O', 'Y', 'CY', 'F', 'N', 'O', 'E', 'R', 'R', 'F', 'F', 'N', 'O'],
+        // Row 3
+        ['O', 'E', 'CR', 'F', 'F', 'N', 'O', 'F', 'B', 'N', 'O', 'E', 'N', 'O', 'F', 'Y', 'Y', 'N', 'O', 'E', 'R', 'CR', 'F', 'R', 'N', 'O'],
+        // Row 4
+        ['O', 'N', 'N', 'F', 'O', 'O', 'O', 'F', 'B', 'N', 'O', 'F', 'F', 'O', 'N', 'O', 'F', 'N', 'O', 'N', 'N', 'N', 'F', 'R', 'N', 'O'],
+        // Row 5
+        ['O', 'R', 'F', 'F', 'R', 'N', 'O', 'N', 'CB', 'N', 'O', 'F', 'N', 'O', 'Y', 'Y', 'F', 'F', 'F', 'Y', 'N', 'O', 'F', 'F', 'N', 'O'],
+        // Row 6
+        ['O', 'R', 'O', 'CR', 'F', 'N', 'O', 'B', 'F', 'F', 'O', 'N', 'N', 'O', 'N', 'O', 'O', 'O', 'CY', 'F', 'N', 'O', 'R', 'F', 'N', 'O'],
+        // Row 7
+        ['O', 'R', 'O', 'F', 'F', 'N', 'O', 'B', 'B', 'F', 'F', 'F', 'N', 'N', 'N', 'O', 'Y', 'F', 'F', 'F', 'N', 'O', 'F', 'F', 'N', 'O'],
+        // Row 8 - Central fragile bridge
+        ['O', 'N', 'O', 'F', 'N', 'O', 'E', 'O', 'F', 'F', 'F', 'F', 'F', 'F', 'F', 'O', 'E', 'O', 'N', 'N', 'O', 'F', 'B', 'B', 'N', 'O'],
+        // Row 9
+        ['O', 'N', 'O', 'F', 'N', 'N', 'N', 'R', 'R', 'F', 'F', 'R', 'R', 'N', 'F', 'O', 'E', 'O', 'R', 'CR', 'O', 'F', 'F', 'B', 'N', 'O'],
+        // Row 10
+        ['O', 'N', 'O', 'O', 'O', 'R', 'CR', 'F', 'O', 'O', 'O', 'R', 'N', 'N', 'O', 'E', 'O', 'R', 'F', 'F', 'N', 'N', 'CB', 'B', 'N', 'O'],
+        // Row 11
+        ['O', 'Y', 'CY', 'F', 'O', 'F', 'R', 'N', 'O', 'E', 'O', 'CR', 'F', 'F', 'R', 'R', 'R', 'F', 'N', 'O', 'B', 'B', 'F', 'F', 'N', 'O'],
+        // Row 12
+        ['O', 'Y', 'F', 'F', 'O', 'E', 'N', 'N', 'O', 'E', 'O', 'E', 'O', 'O', 'O', 'F', 'F', 'N', 'N', 'O', 'CB', 'F', 'F', 'B', 'N', 'O'],
+        // Row 13
+        ['O', 'E', 'F', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'R', 'F', 'F', 'N', 'O', 'F', 'B', 'B', 'N', 'N', 'O'],
+        // Row 14
+        ['O', 'E', 'N', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'F', 'F', 'CR', 'N', 'O', 'F', 'F', 'N', 'N', 'N', 'O'],
+        // Row 15 - Goal (one wrong step on fragiles and you're doomed!)
+        ['O', 'E', 'E', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'E', 'O', 'F', 'F', 'R', 'R', 'F', 'F', 'N', 'G', 'O'],
+        // Row 16
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    ]
+};
+
+// Level 5: The Ultimate Brain Twister
+const LEVEL_5 = {
+    name: "Level 5: The Ultimate Brain Twister",
+    width: 28,
+    height: 18,
+    startPos: { x: 1, y: 1 },
+    goalPos: { x: 26, y: 16 },
+    mathGates: [
+        { x: 7, y: 5, question: "15 × 3", answer: 45 },
+        { x: 14, y: 9, question: "144 ÷ 12", answer: 12 },
+        { x: 21, y: 13, question: "25 + 47", answer: 72 }
+    ],
+    targetMoves: 75,
+    grid: [
+        // Row 0
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+        // Row 1 - Start: The ultimate test begins!
+        ['O', 'S', 'R', 'F', 'F', 'N', 'O', 'B', 'K', 'B', 'O', 'E', 'E', 'O', 'Y', 'F', 'F', 'N', 'O', 'E', 'E', 'O', 'R', 'K', 'R', 'E', 'E', 'O'],
+        // Row 2
+        ['O', 'E', 'R', 'R', 'F', 'D', 'O', 'B', 'B', 'N', 'O', 'E', 'N', 'O', 'Y', 'CY', 'F', 'N', 'O', 'E', 'N', 'O', 'R', 'CR', 'R', 'N', 'E', 'O'],
+        // Row 3
+        ['O', 'E', 'CR', 'F', 'F', 'R', 'O', 'CB', 'F', 'F', 'O', 'E', 'N', 'O', 'F', 'Y', 'Y', 'N', 'O', 'E', 'N', 'O', 'N', 'R', 'R', 'D', 'E', 'O'],
+        // Row 4
+        ['O', 'N', 'N', 'F', 'O', 'O', 'O', 'F', 'B', 'N', 'O', 'F', 'F', 'O', 'N', 'O', 'F', 'D', 'O', 'N', 'N', 'O', 'N', 'N', 'F', 'R', 'N', 'O'],
+        // Row 5 - First Math Gate
+        ['O', 'R', 'F', 'F', 'R', 'N', 'O', 'MG', 'B', 'B', 'O', 'F', 'N', 'O', 'Y', 'Y', 'F', 'Y', 'Y', 'Y', 'N', 'O', 'F', 'F', 'F', 'R', 'K', 'O'],
+        // Row 6
+        ['O', 'R', 'O', 'CR', 'F', 'N', 'O', 'B', 'F', 'F', 'O', 'N', 'N', 'O', 'N', 'O', 'O', 'O', 'O', 'CY', 'N', 'O', 'R', 'R', 'F', 'D', 'E', 'O'],
+        // Row 7
+        ['O', 'R', 'O', 'F', 'F', 'N', 'O', 'CB', 'B', 'F', 'F', 'F', 'N', 'D', 'N', 'O', 'Y', 'F', 'F', 'Y', 'N', 'O', 'F', 'F', 'R', 'R', 'N', 'O'],
+        // Row 8
+        ['O', 'N', 'O', 'F', 'N', 'O', 'E', 'O', 'F', 'F', 'B', 'N', 'N', 'N', 'F', 'O', 'E', 'O', 'N', 'N', 'O', 'F', 'R', 'CR', 'R', 'N', 'N', 'O'],
+        // Row 9 - Second Math Gate (center)
+        ['O', 'N', 'O', 'F', 'N', 'N', 'N', 'R', 'F', 'F', 'F', 'CR', 'R', 'N', 'MG', 'O', 'E', 'O', 'Y', 'CY', 'O', 'F', 'F', 'R', 'N', 'N', 'N', 'O'],
+        // Row 10
+        ['O', 'N', 'O', 'O', 'O', 'R', 'CR', 'F', 'O', 'O', 'O', 'R', 'N', 'N', 'B', 'O', 'E', 'O', 'Y', 'F', 'F', 'F', 'N', 'D', 'N', 'CB', 'B', 'O'],
+        // Row 11
+        ['O', 'Y', 'CY', 'F', 'O', 'F', 'R', 'N', 'O', 'E', 'O', 'F', 'F', 'CR', 'B', 'B', 'B', 'O', 'F', 'Y', 'O', 'B', 'B', 'B', 'N', 'B', 'N', 'O'],
+        // Row 12
+        ['O', 'Y', 'F', 'F', 'O', 'E', 'N', 'N', 'O', 'E', 'O', 'E', 'O', 'O', 'O', 'O', 'CB', 'O', 'F', 'F', 'O', 'E', 'O', 'B', 'K', 'B', 'N', 'O'],
+        // Row 13 - Third Math Gate
+        ['O', 'E', 'F', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'R', 'F', 'F', 'R', 'R', 'R', 'MG', 'O', 'F', 'F', 'B', 'D', 'O'],
+        // Row 14
+        ['O', 'E', 'N', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'F', 'F', 'CR', 'R', 'O', 'N', 'N', 'O', 'B', 'B', 'B', 'N', 'O'],
+        // Row 15
+        ['O', 'E', 'E', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'E', 'O', 'F', 'F', 'O', 'E', 'N', 'O', 'CB', 'F', 'F', 'N', 'O'],
+        // Row 16 - Goal: You made it if you're here!
+        ['O', 'E', 'E', 'N', 'O', 'E', 'E', 'N', 'O', 'E', 'O', 'E', 'E', 'E', 'O', 'E', 'O', 'E', 'N', 'O', 'E', 'N', 'O', 'F', 'F', 'N', 'G', 'O'],
+        // Row 17
+        ['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
     ]
 };
 
