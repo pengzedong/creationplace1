@@ -11,63 +11,34 @@
     <div id="welcomeScreen" class="screen">
         <div class="welcome-container">
             <h1>🎨 Color Path</h1>
-            <p class="tagline">A Strategic Color-Switching Puzzle Game</p>
+            <p class="tagline">Strategic Color-Switching Maze Puzzle</p>
 
             <div class="game-rules">
-                <h2>How to Play:</h2>
+                <h2>游戏规则：</h2>
                 <ul>
-                    <li><strong>Goal:</strong> Reach the flag (🏁) in minimum moves to earn stars!</li>
-                    <li><strong>Core Rule:</strong> Walk ONLY on tiles matching your color or neutral ground!</li>
-                    <li><strong>Strategy:</strong> Use color changers (⚡) to access new areas</li>
-                    <li><strong>Math Gates:</strong> Solve equations (🔢) to unlock purple gates</li>
-                    <li><strong>Keys & Doors:</strong> Collect keys (🔑) to open doors (🚪)</li>
-                    <li><strong>Fragile Tiles:</strong> Step carefully on ⚠️ - they break after one use!</li>
-                    <li><strong>Controls:</strong> Arrows/WASD = Move | R = Restart | U = Undo | H = Hint</li>
+                    <li><strong>目标：</strong>到达终点旗帜 🏁</li>
+                    <li><strong>核心规则：</strong>只能走自己颜色或中性地块！</li>
+                    <li><strong>策略：</strong>用 ⚡ 变色器切换颜色</li>
+                    <li><strong>操作：</strong>方向键/WASD 移动 | R 重新开始 | U 撤销 | H 提示</li>
                 </ul>
             </div>
 
             <div class="name-input-section">
-                <label for="playerName">Enter Your Name (optional):</label>
+                <label for="playerName">输入你的名字（可选）：</label>
                 <input
                     type="text"
                     id="playerName"
-                    placeholder="Anonymous"
+                    placeholder="匿名玩家"
                     maxlength="20"
                     autocomplete="off"
                 >
             </div>
 
-            <button id="startButton" class="btn-primary">Start Game</button>
+            <button id="startButton" class="btn-primary">🎮 开始游戏</button>
 
-            <div class="color-legend">
-                <h3>Color Legend:</h3>
-                <div class="legend-items">
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #e74c3c;"></div>
-                        <span>Red Ground/Player</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #3498db;"></div>
-                        <span>Blue Ground/Player</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #f1c40f;"></div>
-                        <span>Yellow Ground/Player</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #95a5a6;"></div>
-                        <span>Neutral Ground (Safe for all)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #2c3e50;"></div>
-                        <span>Obstacle (Impassable)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #1a1a1a;"></div>
-                        <span>Pit (Fall to death)</span>
-                    </div>
-                </div>
-            </div>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #7f8c8d;">
+                💡 提示：游戏中按 H 键可以获得帮助
+            </p>
         </div>
     </div>
 
